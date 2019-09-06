@@ -36,10 +36,15 @@ app.use(
   bodyParser.urlencoded({
     extended: true,
   }),
+  bodyParser.json(),
 );
 
-app.get('/api/auth', (req, res) => {
-  res.send('ok');
+app.post('/api/auth', (req, res) => {
+  res.send({
+    user: req.body.user,
+    id: 1,
+    type: 'ADMIN'
+  });
 });
 
 server.listen(port, () => console.log(`Poke RaidEx mock running on port ${port}`));

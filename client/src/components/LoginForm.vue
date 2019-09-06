@@ -4,8 +4,8 @@
     v-model="valid"
   >
     <v-text-field
-      v-model="name"
-      :rules="nameRules"
+      v-model="user"
+      :rules="userRules"
       label="Nom"
       required
     ></v-text-field>
@@ -22,7 +22,7 @@
       :disabled="!valid"
       color="success"
       class="mr-4"
-      @click="login"
+      @click="$store.dispatch('user/login', { user, password })"
     >
       Validate
     </v-btn>
@@ -34,30 +34,22 @@
 // @flow
 
 import { Component, Vue } from 'vue-property-decorator';
-import axios from 'axios';
 
 export default
 @Component
 class LoginForm extends Vue {
   valid: boolean = true;
 
-  name: ?string = null;
+  user: ?string = null;
 
   password: ?string = null;
 
-  nameRules: Array<(string) => ?(string | boolean)> = [
+  userRules: Array<(string) => ?(string | boolean)> = [
     v => !!v || 'Le pseudo est obligatoire!',
   ];
 
   passwordRules: Array<(string) => ?(string | boolean)> = [
     v => !!v || 'Le mot de passe est obligatoire!',
   ];
-
-  async login() {
-    const { data } = await axios.get('/api/auth');
-    if (data === 'ok') {
-      this.$router.push({ name: 'home' });
-    }
-  }
 }
 </script>

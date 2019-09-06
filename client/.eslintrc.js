@@ -13,7 +13,8 @@ module.exports = {
     'no-debugger': process.env.NODE_ENV === 'production' ? 'error' : 'off',
     'flowtype-errors/show-errors': 2,
     'flowtype-errors/show-warnings': 1,
-    'class-methods-use-this': 'off',
+    'class-methods-use-this': 0,
+    'no-param-reassign': 0,
   },
   parserOptions: {
     parser: 'babel-eslint',
