@@ -19,9 +19,11 @@
           </v-btn>
         </template>
         <v-list>
-          <v-list-item
-            @click="$store.commit('user/logoff')"
-          >
+          <v-list-item @click="$router.push({ name: 'admin' })">
+            <v-list-item-title>Admin</v-list-item-title>
+          </v-list-item>
+
+          <v-list-item @click="$store.commit('user/logoff')">
             <v-list-item-title>Déconnexion</v-list-item-title>
           </v-list-item>
         </v-list>
