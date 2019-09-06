@@ -1,13 +1,19 @@
 <template>
-  <HelloWorld />
+  <RaidExList />
 </template>
 
 <script>
-import HelloWorld from '../components/HelloWorld.vue';
+// @flow
 
-export default {
+import { Component, Vue } from 'vue-property-decorator';
+import RaidExList from '../components/RaidExList.vue';
+
+export default
+@Component({
   components: {
-    HelloWorld,
+    RaidExList,
   },
-};
+})
+class Home extends Vue {
+}
 </script>
