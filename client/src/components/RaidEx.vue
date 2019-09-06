@@ -32,6 +32,7 @@
         chips
         hint="Mes petits comptes"
         persistent-hint
+        ref="accountsSelect"
       >
        <template v-slot:append-item>
          <v-divider class="mb-2"></v-divider>
@@ -44,6 +45,9 @@
                <v-text-field v-model="accountToRemove" label="Suppression compte">
                   <v-btn slot="append" @click="removeAccount"><v-icon>mdi-minus</v-icon></v-btn>
                </v-text-field>
+               <v-btn v-if="$refs.accountsSelect" @click="$refs.accountsSelect.blur">
+                OK <v-icon dark right>mdi-check</v-icon>
+               </v-btn>
              </form>
            </v-list-item-content>
          </v-list-item>
@@ -155,13 +159,15 @@ class RaidEx extends Vue {
   }
 
   removeAccount() {
-    let pos = this.accounts.map(account => account.toLowerCase()).indexOf(this.accountToRemove.toLowerCase());
+    const accLower = this.accountToRemove.toLowerCase();
+
+    let pos = this.accounts.map(account => account.toLowerCase()).indexOf(accLower);
 
     if (pos > -1) {
       this.accounts.splice(pos, 1);
     }
 
-    pos = this.accountList.map(account => account.toLowerCase()).indexOf(this.accountToRemove.toLowerCase());
+    pos = this.accountList.map(account => account.toLowerCase()).indexOf(accLower);
 
     if (pos > -1) {
       this.accountList.splice(pos, 1);
