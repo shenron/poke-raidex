@@ -1,14 +1,13 @@
 <template>
-  <v-card
-    max-width="344"
-    class="mx-auto"
-  >
+  <v-card max-width="344" class="mx-auto">
     <v-card-title>
       <v-tooltip right>
         <template v-slot:activator="{ on }">
           <v-badge>
             <span>A partir du 10 Septembre</span>
-            <template v-slot:badge><span v-on="on">42</span></template>
+            <template v-slot:badge
+              ><span v-on="on">42</span></template
+            >
           </v-badge>
         </template>
         <span>42 Participants</span>
@@ -16,11 +15,7 @@
     </v-card-title>
 
     <v-card-text>
-      <v-select
-        v-model="team"
-       :items="teams"
-        label="Chez les"
-      >
+      <v-select v-model="team" :items="teams" label="Chez les">
         <v-icon slot="prepend" :color="color">mdi-account</v-icon>
       </v-select>
 
@@ -34,24 +29,47 @@
         persistent-hint
         ref="accountsSelect"
       >
-       <template v-slot:append-item>
-         <v-divider class="mb-2"></v-divider>
-         <v-list-item>
-           <v-list-item-content>
-             <form>
-               <v-text-field v-model="newAccount" label="Nouveau compte">
-                  <v-btn slot="append" @click="applyNewCompte"><v-icon>mdi-plus</v-icon></v-btn>
-               </v-text-field>
-               <v-text-field v-model="accountToRemove" label="Suppression compte">
-                  <v-btn slot="append" @click="removeAccount"><v-icon>mdi-minus</v-icon></v-btn>
-               </v-text-field>
-               <v-btn v-if="$refs.accountsSelect" @click="$refs.accountsSelect.blur">
-                OK <v-icon dark right>mdi-check</v-icon>
-               </v-btn>
-             </form>
-           </v-list-item-content>
-         </v-list-item>
-       </template>
+        <template v-slot:append-item>
+          <v-layout row>
+            <v-divider class="mb-2"></v-divider>
+            <v-list-item>
+              <v-list-item-content>
+                <form>
+                  <v-btn icon
+                    @click="isExtandedMenuDisplayed = !isExtandedMenuDisplayed"
+                    class="ml-1 mr-1"
+                  >
+                    <v-icon>{{ isExtandedMenuDisplayed ? 'mdi-chevron-up' : 'mdi-chevron-down' }}</v-icon>
+                  </v-btn>
+
+                  <v-expand-transition>
+                    <div v-show="isExtandedMenuDisplayed">
+                      <v-text-field v-model="newAccount" label="Nouveau compte">
+                        <v-btn slot="append" small @click="applyNewCompte"><v-icon>mdi-plus</v-icon></v-btn>
+                      </v-text-field>
+                      <v-text-field
+                        v-model="accountToRemove"
+                        label="Suppression compte"
+                      >
+                        <v-btn slot="append"
+                          small
+                          @click="removeAccount"
+                        ><v-icon>mdi-minus</v-icon></v-btn>
+                      </v-text-field>
+                    </div>
+                  </v-expand-transition>
+
+                  <v-btn
+                    v-if="$refs.accountsSelect"
+                    @click="$refs.accountsSelect.blur"
+                  >
+                    OK <v-icon dark right>mdi-check</v-icon>
+                  </v-btn>
+                </form>
+              </v-list-item-content>
+            </v-list-item>
+          </v-layout>
+        </template>
       </v-select>
     </v-card-text>
 
@@ -75,7 +93,12 @@
         </v-card>
       </v-dialog>
 
-      <v-dialog v-if="!isAvailable" v-model="leaveDialog" persistent max-width="290">
+      <v-dialog
+        v-if="!isAvailable"
+        v-model="leaveDialog"
+        persistent
+        max-width="290"
+      >
         <template v-slot:activator="{ on }">
           <v-btn class="ma-2" dark v-on="on" color="red">
             <v-icon dark>mdi-cancel</v-icon>
@@ -96,6 +119,7 @@
 </template>
 
 <script>
+// @flow
 import { Component, Prop, Vue } from 'vue-property-decorator';
 
 export default
@@ -105,13 +129,15 @@ class RaidEx extends Vue {
 
   savedModal: boolean = false;
 
-  team: string = 'Bravoure';
+  team: ?string = 'Bravoure';
 
   accounts: Array<string> = ['Moi', 'Lui'];
 
   newAccount: string = '';
 
   accountToRemove: string = '';
+
+  isExtandedMenuDisplayed: boolean = false;
 
   get color() {
     let color = '';
@@ -135,7 +161,7 @@ class RaidEx extends Vue {
     return color;
   }
 
-  accountList: Array<String> = ['Moi', 'Lui', 'Nous'];
+  accountList: Array<string> = ['Moi', 'Lui', 'Nous'];
 
   get isAvailable() {
     return this.id % 2 === 0;
@@ -161,13 +187,17 @@ class RaidEx extends Vue {
   removeAccount() {
     const accLower = this.accountToRemove.toLowerCase();
 
-    let pos = this.accounts.map(account => account.toLowerCase()).indexOf(accLower);
+    let pos = this.accounts
+      .map(account => account.toLowerCase())
+      .indexOf(accLower);
 
     if (pos > -1) {
       this.accounts.splice(pos, 1);
     }
 
-    pos = this.accountList.map(account => account.toLowerCase()).indexOf(accLower);
+    pos = this.accountList
+      .map(account => account.toLowerCase())
+      .indexOf(accLower);
 
     if (pos > -1) {
       this.accountList.splice(pos, 1);

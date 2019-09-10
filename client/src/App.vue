@@ -10,16 +10,15 @@
 
       <v-menu v-if="$store.state.user.id" offset-y>
         <template v-slot:activator="{ on }">
-          <v-btn
-            color="primary"
-            dark
-            v-on="on"
-          >
+          <v-btn color="primary" dark v-on="on">
             {{ $store.state.user.user }}
           </v-btn>
         </template>
         <v-list>
-          <v-list-item @click="$router.push({ name: 'admin' })">
+          <v-list-item
+            v-if="$store.state.user.type === 'ADMIN'"
+            @click="$router.push({ name: 'admin' })"
+          >
             <v-list-item-title>Admin</v-list-item-title>
           </v-list-item>
 
@@ -57,9 +56,9 @@ class App extends Vue {
 <style lang="scss">
 main {
   background-color: #fff;
-  background-image: url('~/bg-kyurem.jpg');
+  background-image: url("~/bg-kyurem.jpg");
   background-position: right bottom;
   background-repeat: no-repeat;
-  background-size:  20%;
+  background-size: 20%;
 }
 </style>

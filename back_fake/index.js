@@ -43,7 +43,7 @@ app.post('/api/auth', (req, res) => {
   res.send({
     user: req.body.user,
     id: 1,
-    type: 'ADMIN'
+    type: req.body.user === 'admin' ? 'ADMIN' : 'OTHER',
   });
 });
 
