@@ -2,6 +2,7 @@
   <v-form
     ref="form"
     v-model="valid"
+    @submit.prevent="onSubmit"
   >
     <v-text-field
       v-model="user"
@@ -22,7 +23,7 @@
       :disabled="!valid"
       color="success"
       class="mr-4"
-      @click="$store.dispatch('user/login', { user, password })"
+      type="submit"
     >
       Validate
     </v-btn>
@@ -51,5 +52,15 @@ class LoginForm extends Vue {
   passwordRules: Array<(string) => ?(string | boolean)> = [
     v => !!v || 'Le mot de passe est obligatoire!',
   ];
+
+  async onSubmit() {
+    const { user, password } = this;
+
+    const { id } = await this.$store.dispatch('user/login', { user, password });
+
+    if (id) {
+      this.$emit('logged');
+    }
+  }
 }
 </script>

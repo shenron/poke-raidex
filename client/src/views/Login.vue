@@ -5,7 +5,7 @@
         <h1>Login</h1>
       </v-row>
       <v-row justify="space-around">
-        <LoginForm/>
+        <LoginForm @logged="$router.push({ name: 'home' })" />
       </v-row>
     </v-col>
   </v-row>
@@ -24,6 +24,16 @@ export default
   },
 })
 class Login extends Vue {
+  get user() {
+    return this.$store.getters['user/user'];
+  }
 
+  beforeRouteEnter(to: Object, from: Object, next: Function) {
+    next((vm: Vue) => {
+      if (vm.user.id) {
+        vm.$router.push({ name: 'home' });
+      }
+    });
+  }
 }
 </script>

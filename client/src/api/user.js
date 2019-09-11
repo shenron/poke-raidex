@@ -9,4 +9,7 @@ export default {
       password,
     });
   },
+  logOff() {
+    return axios.delete('/api/auth');
+  },
 };

@@ -8,21 +8,21 @@
 
       <v-spacer></v-spacer>
 
-      <v-menu v-if="$store.state.user.id" offset-y>
+      <v-menu v-if="user.id" offset-y>
         <template v-slot:activator="{ on }">
           <v-btn color="primary" dark v-on="on">
-            {{ $store.state.user.user }}
+            {{ user.user }}
           </v-btn>
         </template>
         <v-list>
           <v-list-item
-            v-if="$store.state.user.type === 'ADMIN'"
+            v-if="user.type === 'ADMIN'"
             @click="$router.push({ name: 'admin' })"
           >
             <v-list-item-title>Admin</v-list-item-title>
           </v-list-item>
 
-          <v-list-item @click="$store.commit('user/logoff')">
+          <v-list-item @click="logOff">
             <v-list-item-title>Déconnexion</v-list-item-title>
           </v-list-item>
         </v-list>
@@ -36,19 +36,18 @@
 </template>
 
 <script>
-import { Component, Vue, Watch } from 'vue-property-decorator';
-import type { UserSateType } from '@/store/modules/user';
+import { Component, Vue } from 'vue-property-decorator';
 
 export default
 @Component
 class App extends Vue {
-  @Watch('$store.state.user', { deep: true })
-  onUserStateChanged(user: UserSateType) {
-    if (user.id) {
-      this.$router.push({ name: 'home' });
-    } else {
-      this.$router.push({ name: 'login' });
-    }
+  get user() {
+    return this.$store.getters['user/user'];
+  }
+
+  async logOff() {
+    await this.$store.dispatch('user/logOff');
+    this.$router.push({ name: 'login' });
   }
 }
 </script>

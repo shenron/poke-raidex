@@ -47,4 +47,8 @@ app.post('/api/auth', (req, res) => {
   });
 });
 
+app.delete('/api/auth', (req, res) => {
+  res.send('ok');
+});
+
 server.listen(port, () => console.log(`Poke RaidEx mock running on port ${port}`));
