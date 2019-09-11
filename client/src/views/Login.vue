@@ -25,10 +25,10 @@ export default
 })
 class Login extends Vue {
   get user() {
-    return this.$store.getters['user/user'];
+    return this.$store.state.user;
   }
 
-  beforeRouteEnter(to: Object, from: Object, next: Function) {
+  created(to: Object, from: Object, next: Function) {
     next((vm: Vue) => {
       if (vm.user.id) {
         vm.$router.push({ name: 'home' });

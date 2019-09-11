@@ -5,7 +5,12 @@
       wrap
     >
       <v-flex xs12 class="core-goto">
-        <h1>Admin</h1>
+        <v-img
+          :src="require('../assets/pokemon_center.png')"
+          class="my-3"
+          contain
+          height="164"
+        ></v-img>
       </v-flex>
     </v-layout>
   </v-container>

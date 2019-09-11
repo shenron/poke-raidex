@@ -3,13 +3,15 @@
 import { Vue } from 'vue-property-decorator';
 import api from '@/api/user';
 
+const userLocalStorage = localStorage.getItem('user');
+
 export type UserStateType = {|
   id: ?string,
   user: ?string,
   type: ?string,
 |};
 
-const state: UserStateType = {
+const state: UserStateType = userLocalStorage ? JSON.parse(userLocalStorage) : {
   id: null,
   user: 'Guest',
   type: null,
@@ -17,13 +19,6 @@ const state: UserStateType = {
 
 // getters
 const getters = {
-  user(_state: UserStateType) {
-    const localUser = localStorage.getItem('user');
-    if (localUser) {
-      return JSON.parse(localUser);
-    }
-    return _state;
-  },
 };
 
 // actions

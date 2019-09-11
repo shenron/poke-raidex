@@ -32,7 +32,7 @@ const router = new Router({
 });
 
 router.beforeEach((to, from, next) => {
-  if (to.matched.some(record => !record.meta.unsecure) && !store.getters['user/user'].id) {
+  if (to.matched.some(record => !record.meta.unsecure) && !store.state.user.id) {
     return router.push({ name: 'login' });
   }
   return next();
