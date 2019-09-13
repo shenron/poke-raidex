@@ -15,13 +15,21 @@
     </v-card-title>
 
     <v-card-text>
-      <v-select v-model="team" :items="teams" label="Chez les">
+      <v-select
+        v-model="teamId"
+        :items="teams"
+        item-text="label"
+        item-value="id"
+        label="Chez les"
+      >
         <v-icon slot="prepend" :color="color">mdi-account</v-icon>
       </v-select>
 
       <v-select
-        v-model="accounts"
+        v-model="accountIds"
         :items="accountList"
+        item-value="id"
+        item-text="label"
         label="Comptes"
         multiple
         chips
@@ -35,26 +43,32 @@
             <v-list-item>
               <v-list-item-content>
                 <form>
-                  <v-btn icon
+                  <v-btn
+                    icon
                     @click="isExtandedMenuDisplayed = !isExtandedMenuDisplayed"
                     class="ml-1 mr-1"
                   >
-                    <v-icon>{{ isExtandedMenuDisplayed ? 'mdi-chevron-up' : 'mdi-chevron-down' }}</v-icon>
+                    <v-icon>{{
+                      isExtandedMenuDisplayed
+                        ? 'mdi-chevron-up'
+                        : 'mdi-chevron-down'
+                    }}</v-icon>
                   </v-btn>
 
                   <v-expand-transition>
                     <div v-show="isExtandedMenuDisplayed">
                       <v-text-field v-model="newAccount" label="Nouveau compte">
-                        <v-btn slot="append" small @click="applyNewCompte"><v-icon>mdi-plus</v-icon></v-btn>
+                        <v-btn slot="append" small @click="applyNewCompte"
+                          ><v-icon>mdi-plus</v-icon></v-btn
+                        >
                       </v-text-field>
                       <v-text-field
                         v-model="accountToRemove"
                         label="Suppression compte"
                       >
-                        <v-btn slot="append"
-                          small
-                          @click="removeAccount"
-                        ><v-icon>mdi-minus</v-icon></v-btn>
+                        <v-btn slot="append" small @click="removeAccount"
+                          ><v-icon>mdi-minus</v-icon></v-btn
+                        >
                       </v-text-field>
                     </div>
                   </v-expand-transition>
@@ -88,7 +102,9 @@
           <v-card-title class="headline">C'est dans la boite!</v-card-title>
           <v-card-actions>
             <div class="flex-grow-1"></div>
-            <v-btn color="green darken-1" text @click="savedModal = false">OK</v-btn>
+            <v-btn color="green darken-1" text @click="savedModal = false"
+              >OK</v-btn
+            >
           </v-card-actions>
         </v-card>
       </v-dialog>
@@ -109,8 +125,12 @@
           <v-card-text>Vous pouvez à tout moment le rejoindre ;)</v-card-text>
           <v-card-actions>
             <div class="flex-grow-1"></div>
-            <v-btn color="green darken-1" text @click="leaveDialog = false">Oui</v-btn>
-            <v-btn color="green darken-1" text @click="leaveDialog = false">Non</v-btn>
+            <v-btn color="green darken-1" text @click="leaveDialog = false"
+              >Oui</v-btn
+            >
+            <v-btn color="green darken-1" text @click="leaveDialog = false"
+              >Non</v-btn
+            >
           </v-card-actions>
         </v-card>
       </v-dialog>
@@ -129,9 +149,9 @@ class RaidEx extends Vue {
 
   savedModal: boolean = false;
 
-  team: ?string = 'Bravoure';
+  teamId: number = 1;
 
-  accounts: Array<string> = ['Moi', 'Lui'];
+  accountIds: Array<number> = [1, 3];
 
   newAccount: string = '';
 
@@ -161,47 +181,63 @@ class RaidEx extends Vue {
     return color;
   }
 
-  accountList: Array<string> = ['Moi', 'Lui', 'Nous'];
+  accountList: Array<{ id: number, label: string }> = [
+    { id: 1, label: 'Moi' },
+    { id: 2, label: 'Lui' },
+    { id: 3, label: 'Nous' },
+  ];
 
   get isAvailable() {
     return this.id % 2 === 0;
   }
 
   get teams() {
-    return ['Bravoure', 'Sagesse', 'Instinct'];
+    return [
+      { id: 1, label: 'Bravoure' },
+      { id: 2, label: 'Sagesse' },
+      { id: 3, label: 'Instinct' },
+    ];
   }
 
   created() {
     if (this.id % 2 === 0) {
-      this.accounts = [];
+      this.accountIds = [];
       this.team = null;
     }
   }
 
   applyNewCompte() {
-    this.accountList.push(this.newAccount);
-    this.accounts.push(this.newAccount);
-    this.newAccount = '';
+    // fake query to save new account
+    setTimeout(() => {
+      // fake id,
+      const id = Math.floor(Math.random() * (100 - 20 + 1) + 20);
+      const newAccount = {
+        id,
+        label: this.newAccount,
+      };
+      this.accountList.push(newAccount);
+      this.accountIds.push(newAccount.id);
+      this.newAccount = '';
+    }, 3000);
   }
 
   removeAccount() {
     const accLower = this.accountToRemove.toLowerCase();
 
-    let pos = this.accounts
-      .map(account => account.toLowerCase())
-      .indexOf(accLower);
-
-    if (pos > -1) {
-      this.accounts.splice(pos, 1);
+    const { id } = this.accountList.find(account => account.label.toLowerCase() === accLower) || {};
+    if (!id) {
+      return;
     }
 
-    pos = this.accountList
-      .map(account => account.toLowerCase())
-      .indexOf(accLower);
-
+    // remove from selected
+    let pos = this.accountIds.findIndex(accountId => accountId === id);
     if (pos > -1) {
-      this.accountList.splice(pos, 1);
+      this.accountIds.splice(pos, 1);
     }
+
+    // remove from the available list
+    pos = this.accountList.findIndex(account => account.id === id);
+    this.accountList.splice(pos, 1);
 
     this.accountToRemove = '';
   }

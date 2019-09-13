@@ -14,7 +14,13 @@
     <v-row class="fill-height">
       <v-col sm="12" lg="3">
         <form>
-          <v-select v-model="arena" :items="arenaList" label="Arène"></v-select>
+          <v-select
+            v-model="arenaId"
+            item-value="id"
+            item-text="label"
+            :items="arenaList"
+            label="Arène"
+          ></v-select>
 
           <v-menu
             ref="startEventMenu"
@@ -193,7 +199,7 @@ class Admin extends Vue {
     details?: string,
     start: string,
     end?: string,
-    color: string
+    color: string,
   |}> = [
     {
       name: 'Event 1',
@@ -212,10 +218,14 @@ class Admin extends Vue {
     },
   ];
 
-  arena: ?string = null;
+  arenaId: ?number = 0;
 
   get arenaList() {
-    return ['Chaudron', 'Princesse Pauline', 'Mougins'];
+    return [
+      { id: 1, label: 'Chaudron' },
+      { id: 2, label: 'Princesse Pauline' },
+      { id: 3, label: 'Mougins' },
+    ];
   }
 
   get title() {
