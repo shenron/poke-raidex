@@ -66,16 +66,16 @@
                         v-model="accountToRemove"
                         label="Suppression compte"
                       >
-                        <v-btn slot="append" small @click="removeAccount"
-                          ><v-icon>mdi-minus</v-icon></v-btn
-                        >
+                        <v-btn slot="append" small @click="removeAccount">
+                          <v-icon>mdi-minus</v-icon>
+                        </v-btn>
                       </v-text-field>
                     </div>
                   </v-expand-transition>
 
                   <v-btn
                     v-if="$refs.accountsSelect"
-                    @click="$refs.accountsSelect.blur"
+                    @click="onCloseManageAccount"
                   >
                     OK <v-icon dark right>mdi-check</v-icon>
                   </v-btn>
@@ -161,16 +161,16 @@ class RaidEx extends Vue {
 
   get color() {
     let color = '';
-    switch (this.team) {
-      case 'Bravoure': {
+    switch (this.teamId) {
+      case 1: {
         color = 'red';
         break;
       }
-      case 'Sagesse': {
+      case 2: {
         color = 'blue';
         break;
       }
-      case 'Instinct': {
+      case 3: {
         color = 'yellow';
         break;
       }
@@ -206,19 +206,21 @@ class RaidEx extends Vue {
     }
   }
 
+  onCloseManageAccount() {
+    this.isExtandedMenuDisplayed = false;
+    this.$refs.accountsSelect.blur();
+  }
+
   applyNewCompte() {
-    // fake query to save new account
-    setTimeout(() => {
-      // fake id,
-      const id = Math.floor(Math.random() * (100 - 20 + 1) + 20);
-      const newAccount = {
-        id,
-        label: this.newAccount,
-      };
-      this.accountList.push(newAccount);
-      this.accountIds.push(newAccount.id);
-      this.newAccount = '';
-    }, 3000);
+    // fake id,
+    const id = Math.floor(Math.random() * (100 - 20 + 1) + 20);
+    const newAccount = {
+      id,
+      label: this.newAccount,
+    };
+    this.accountList.push(newAccount);
+    this.accountIds.push(newAccount.id);
+    this.newAccount = '';
   }
 
   removeAccount() {

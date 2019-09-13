@@ -46,8 +46,8 @@
             </template>
             <v-date-picker v-model="startEvent" no-title scrollable>
               <div class="flex-grow-1"></div>
-              <v-btn text color="primary" @click="startEvent = false">
-                Cancel
+              <v-btn text color="primary" @click="startEventMenu = false">
+                Annuler
               </v-btn>
               <v-btn
                 text
@@ -78,8 +78,8 @@
             </template>
             <v-date-picker v-model="endEvent" no-title scrollable>
               <div class="flex-grow-1"></div>
-              <v-btn text color="primary" @click="endEvent = false">
-                Cancel
+              <v-btn text color="primary" @click="endEventMenu = false">
+                Annuler
               </v-btn>
               <v-btn
                 text
@@ -91,7 +91,7 @@
             </v-date-picker>
           </v-menu>
 
-          <v-btn color="primary">
+          <v-btn @click="addEvent" color="primary">
             Ajouter
           </v-btn>
         </form>
@@ -124,6 +124,8 @@
             :now="today"
             :type="type"
             @click:event="showEvent"
+            @click:date="updateDateEvent"
+            @click:day="updateDateEvent"
             @change="updateRange"
           ></v-calendar>
           <v-menu
@@ -132,26 +134,16 @@
             :activator="selectedElement"
             offset-x
           >
-            <v-card color="grey lighten-4" min-width="350px" flat>
+            <v-card color="grey lighten-4" min-width="200px" flat>
               <v-toolbar :color="selectedEvent.color" dark>
-                <v-btn icon>
+                <v-btn icon @click="enableUpdateDateEvent(selectedEvent)">
                   <v-icon>mdi-pencil</v-icon>
                 </v-btn>
                 <v-toolbar-title v-html="selectedEvent.name"></v-toolbar-title>
-                <div class="flex-grow-1"></div>
-                <v-btn icon>
-                  <v-icon>mdi-heart</v-icon>
-                </v-btn>
-                <v-btn icon>
-                  <v-icon>mdi-dots-vertical</v-icon>
-                </v-btn>
               </v-toolbar>
-              <v-card-text>
-                <span v-html="selectedEvent.details"></span>
-              </v-card-text>
               <v-card-actions>
-                <v-btn text color="secondary" @click="selectedOpen = false">
-                  Cancel
+                <v-btn @click="onCancelEvent(selectedEvent)">
+                  <v-icon>mdi-trash-can</v-icon>
                 </v-btn>
               </v-card-actions>
             </v-card>
@@ -166,6 +158,14 @@
 // @flow
 
 import { Component, Vue } from 'vue-property-decorator';
+
+type EventType = {|
+  id: number,
+  name: string,
+  start: ?string,
+  end: ?string,
+  color: string,
+|};
 
 export default
 @Component
@@ -194,27 +194,26 @@ class Admin extends Vue {
 
   selectedOpen: boolean = false;
 
-  events: Array<{|
-    name: string,
-    details?: string,
-    start: string,
-    end?: string,
-    color: string,
-  |}> = [
+  eventToUpdate: ?EventType = null;
+
+  get eventColors(): Array<string> {
+    return ['deep-purple', 'blue', 'green'];
+  }
+
+  events: Array<EventType> = [
     {
-      name: 'Event 1',
-      details: 'Going to the beach!',
+      id: 1,
+      name: 'Chaudron',
       start: '2018-12-29',
       end: '2019-01-01',
-      color: 'blue',
+      color: 'deep-purple',
     },
     {
-      name: 'Event 2',
-      details:
-        'This starts in the middle of an event and spans over multiple events',
+      id: 2,
+      name: 'Princesse Pauline',
       start: '2018-12-31',
       end: '2019-01-04',
-      color: 'deep-purple',
+      color: 'blue',
     },
   ];
 
@@ -252,6 +251,15 @@ class Admin extends Vue {
     });
   }
 
+  onCancelEvent(eventToDelete: EventType) {
+    this.selectedOpen = false;
+
+    const pos = this.events.findIndex(event => event.id === eventToDelete.id);
+    if (pos > -1) {
+      this.events.splice(pos, 1);
+    }
+  }
+
   getEventColor(event: Object) {
     return event.color;
   }
@@ -266,6 +274,67 @@ class Admin extends Vue {
 
   next() {
     this.$refs.calendar.next();
+  }
+
+  addEvent() {
+    let name = '';
+    if (this.arenaId) {
+      const arenaFound = this.arenaList.find(arena => arena.id === this.arenaId);
+      if (arenaFound) {
+        name = arenaFound.label;
+      }
+    }
+
+    if (!name || !this.startEvent || !this.endEvent || !this.arenaId) {
+      return;
+    }
+
+    // before, save the event in BD
+
+    this.events.push({
+      id: -1,
+      name,
+      start: this.startEvent,
+      end: this.endEvent,
+      color: this.eventColors[this.arenaId] || 'grey',
+    });
+  }
+
+  enableUpdateDateEvent(event: EventType) {
+    this.selectedOpen = false;
+    this.eventToUpdate = {
+      ...event,
+      start: null,
+      end: null,
+    };
+
+    event.color = 'orange';
+  }
+
+  updateDateEvent({ date }: { date: string }) {
+    if (this.eventToUpdate) {
+      if (!this.eventToUpdate.start) {
+        this.eventToUpdate.start = date;
+      } else if (!this.eventToUpdate.end) {
+        this.eventToUpdate.end = date;
+      }
+
+      // ready to save
+      if (this.eventToUpdate.start && this.eventToUpdate.end) {
+        // save in BD
+
+        const pos = this.events.findIndex(event => event.id === (this.eventToUpdate ? this.eventToUpdate.id : -1));
+        if (pos === -1) {
+          throw Error('Impossible to update the bind event');
+        }
+
+        if (this.eventToUpdate) {
+          this.events.splice(pos, 1, this.eventToUpdate);
+
+          this.eventToUpdate = null;
+        }
+      }
+    }
   }
 
   showEvent({ nativeEvent, event }: { nativeEvent: Event, event: Event }) {
