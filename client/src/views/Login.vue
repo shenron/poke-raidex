@@ -28,7 +28,11 @@ class Login extends Vue {
     return this.$store.state.user;
   }
 
-  created(to: Object, from: Object, next: Function) {
+  created(to: Object, from: Object, next: ?Function) {
+    if (!next) {
+      return;
+    }
+
     next((vm: Vue) => {
       if (vm.user.id) {
         vm.$router.push({ name: 'home' });

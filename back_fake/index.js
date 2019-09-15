@@ -42,9 +42,79 @@ app.use(
 app.post('/api/auth', (req, res) => {
   res.send({
     user: req.body.user,
-    id: 1,
+    id: '1',
     type: req.body.user === 'admin' ? 'ADMIN' : 'OTHER',
+    accounts: [{ id: '2', label: 'Martine' }, { id: '3', label: 'Gilberte' }, { id: '4', label: 'Morice' }, { id: '5', label: 'Other' }],
   });
+});
+
+const events = [
+  {
+    id: '1',
+    users: [
+      {
+        id: '10',
+        user: 'Toto',
+        accountIds: ['2', '3', '4'],
+        teamId: '1',
+      },
+      {
+        id: '20',
+        user: 'Tata',
+        accountIds: ['5'],
+        teamId: '1',
+      },
+    ],
+    start: '2019-01-08',
+    end: '2019-01-10',
+    areaId: '1',
+  },
+  {
+    id: '2',
+    users: [],
+    teamId: '2',
+    start: '2019-02-10',
+    end: '2019-02-17',
+    areaId: '2',
+  },
+  {
+    id: '3',
+    users: [
+      {
+        id: '1',
+        user: 'ADMIN',
+        accountIds: ['2', '5'],
+        teamId: '3',
+      },
+    ],
+    start: '2019-02-10',
+    end: '2019-02-17',
+    areaId: '3',
+  },
+];
+
+const areas = [{ id: '1', label: 'Chaudron' }, { id: '2', label: 'Princesse Pauline' }, { id: '3', label: 'Mougins' }];
+
+const teams = [
+  { id: '1', label: 'Bravoure', color: 'red' },
+  { id: '2', label: 'Sagesse', color: 'blue' },
+  { id: '3', label: 'Instinct', color: 'yellow' },
+];
+
+app.get('/api/raidex', (req, res) => {
+  res.send(events.map(event => event.id));
+});
+
+app.get('/api/raidex/:id', (req, res) => {
+  res.send(events.find(event => event.id === req.params.id));
+});
+
+app.get('/api/browses/areas', (req, res) => {
+  res.send(areas);
+});
+
+app.get('/api/browses/teams', (req, res) => {
+  res.send(teams);
 });
 
 app.delete('/api/auth', (req, res) => {

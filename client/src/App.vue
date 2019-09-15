@@ -46,6 +46,11 @@ import { Component, Vue } from 'vue-property-decorator';
 export default
 @Component
 class App extends Vue {
+  created() {
+    this.$store.dispatch('raidex/getAreas');
+    this.$store.dispatch('raidex/getTeams');
+  }
+
   get user() {
     return this.$store.state.user;
   }
