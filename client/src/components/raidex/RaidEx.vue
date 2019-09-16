@@ -101,14 +101,20 @@
     </v-card-text>
 
     <v-card-actions>
-      <v-dialog v-model="savedModal" persistent max-width="290">
+      <v-dialog
+        v-if="!isSubscribed || hasBeenChanged"
+        key="dialog-edit"
+        v-model="savedModal"
+        persistent
+        max-width="290"
+      >
         <template v-slot:activator="{ on }">
           <v-btn
-            v-if="!isSubscribed || hasBeenChanged"
             class="ma-2"
             v-on="on"
             :color="hasBeenChanged ? 'orange' : 'green'"
-            dark
+            :dark="isValidForm"
+            :disabled="!isValidForm"
           >
             <v-icon dark>mdi-checkbox-marked-circle</v-icon>
           </v-btn>
@@ -117,7 +123,7 @@
           <v-card-title class="headline">C'est dans la boite!</v-card-title>
           <v-card-actions>
             <div class="flex-grow-1"></div>
-            <v-btn color="green darken-1" text @click="savedModal = false"
+            <v-btn color="green darken-1" text @click="editSubscription"
               >OK</v-btn
             >
           </v-card-actions>
@@ -125,10 +131,11 @@
       </v-dialog>
 
       <v-dialog
-        v-if="isSubscribed"
+        v-else-if="isSubscribed"
         v-model="leaveDialog"
         persistent
         max-width="290"
+        key="dialog-unsubscribe"
       >
         <template v-slot:activator="{ on }">
           <v-btn class="ma-2" dark v-on="on" color="red">
@@ -140,9 +147,7 @@
           <v-card-text>Vous pouvez à tout moment le rejoindre ;)</v-card-text>
           <v-card-actions>
             <div class="flex-grow-1"></div>
-            <v-btn color="green darken-1" text @click="leaveDialog = false"
-              >Oui</v-btn
-            >
+            <v-btn color="green darken-1" text @click="unsubscribe">Oui</v-btn>
             <v-btn color="green darken-1" text @click="leaveDialog = false"
               >Non</v-btn
             >

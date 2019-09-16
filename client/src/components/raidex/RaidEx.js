@@ -50,7 +50,7 @@ class RaidEx extends Vue {
     id: string,
     user: string,
     accountIds: Array<string>,
-    teamId: Array<string>,
+    teamId: string,
   }> = [];
 
   // saved raid ex - start
@@ -129,19 +129,25 @@ class RaidEx extends Vue {
     const dateStart = new Date(this.start);
     str += ` ${dateStart.getDate()}`;
 
-    const dateEnd = new Date(this.end);
+    if (this.end) {
+      const dateEnd = new Date(this.end);
 
-    if (dateStart.getMonth() !== dateEnd.getMonth()) {
-      str += `${monthNames[dateStart.getMonth()]}`;
+      if (dateStart.getMonth() !== dateEnd.getMonth()) {
+        str += `${monthNames[dateStart.getMonth()]}`;
+      }
+
+      str += ` au ${dateEnd.getDate()} ${monthNames[dateEnd.getMonth()]}`;
     }
-
-    str += ` au ${dateEnd.getDate()} ${monthNames[dateEnd.getMonth()]}`;
 
     return str;
   }
 
   get usersLength() {
     return this.users.reduce((a, b) => a + b.accountIds.length, this.users.length);
+  }
+
+  get isValidForm() {
+    return this.teamId !== null && this.accountIds.length > 0;
   }
 
   async created() {
@@ -160,6 +166,37 @@ class RaidEx extends Vue {
     if (currentAccount) {
       this.accountIds = currentAccount.accountIds;
       this.teamId = currentAccount.teamId;
+    }
+  }
+
+  editSubscription() {
+    this.savedModal = false;
+
+    // update
+    if (this.isSubscribed) {
+      //
+    } else {
+      // create
+      this.users.push({
+        id: this.$store.state.user.id,
+        user: this.$store.state.user.user,
+        accountIds: this.accountIds,
+        teamId: String(this.teamId),
+      });
+    }
+  }
+
+  unsubscribe() {
+    this.leaveDialog = false;
+
+    this.teamId = null;
+    this.accountIds = [];
+
+    const { currentAccount } = this;
+    const pos = this.users.indexOf(currentAccount);
+
+    if (pos > -1) {
+      this.users.splice(pos, 1);
     }
   }
 
