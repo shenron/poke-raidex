@@ -7,14 +7,16 @@ const userLocalStorage = localStorage.getItem('user');
 
 export type UserStateType = {|
   id: ?string,
-  user: ?string,
+  user: string,
   type: ?string,
+  accounts: Array<{ id: string, label: string}>,
 |};
 
 const state: UserStateType = userLocalStorage ? JSON.parse(userLocalStorage) : {
   id: null,
   user: 'Guest',
   type: null,
+  accounts: [],
 };
 
 // getters
@@ -46,11 +48,16 @@ const mutations = {
     });
   },
   setUser(_state: UserStateType, user: UserStateType) {
-    Object.keys(user).forEach((key) => {
-      if (user[key] !== undefined) {
-        _state[key] = user[key];
-      }
-    });
+    _state.id = user.id;
+    _state.user = user.user;
+    _state.type = user.type;
+    _state.accounts = user.accounts;
+
+    localStorage.setItem('user', JSON.stringify(_state));
+  },
+  setAccounts(_state: UserStateType, accounts: Array<{ id: string, label: string}>) {
+    _state.accounts = accounts;
+
     localStorage.setItem('user', JSON.stringify(_state));
   },
 };

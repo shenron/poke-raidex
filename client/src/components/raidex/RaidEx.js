@@ -5,6 +5,7 @@ import {
 } from 'vue-property-decorator';
 import api from '@/api/raidex';
 import monthNames from '@/_base/monthNames';
+import type { UserStateType } from '@/store/modules/user';
 
 const { getRaidEx } = api;
 
@@ -85,6 +86,10 @@ class RaidEx extends Vue {
     return JSON.stringify(user.accountIds) !== JSON.stringify(this.accountIds) || user.teamId !== this.teamId;
   }
 
+  get userStore() {
+    return this.$store.state.user;
+  }
+
   /**
    * Current account from saved raid ex
    */
@@ -92,32 +97,9 @@ class RaidEx extends Vue {
     return this.users.find(user => user.id === this.$store.state.user.id);
   }
 
-  get color() {
-    let color = '';
-    switch (this.teamId) {
-      case 1: {
-        color = 'red';
-        break;
-      }
-      case 2: {
-        color = 'blue';
-        break;
-      }
-      case 3: {
-        color = 'yellow';
-        break;
-      }
-      default: {
-        color = '';
-      }
-    }
-    return color;
-  }
-
   get isSubscribed() {
     return !!this.currentAccount;
   }
-
 
   get dateStr() {
     if (!this.start || !this.end) {
@@ -143,7 +125,7 @@ class RaidEx extends Vue {
   }
 
   get usersLength() {
-    return this.users.reduce((a, b) => a + b.accountIds.length, this.users.length);
+    return this.users.reduce((a, b) => a + b.accountIds.length, 0);
   }
 
   get isValidForm() {
@@ -157,8 +139,6 @@ class RaidEx extends Vue {
     this.start = data.start;
     this.end = data.end;
     this.areaId = data.areaId;
-
-    this.accountList = [...this.$store.state.user.accounts];
   }
 
   @Watch('currentAccount', { deep: true })
@@ -169,12 +149,29 @@ class RaidEx extends Vue {
     }
   }
 
+  @Watch('$store.state.user', { deep: true, immediate: true })
+  onStoreUserChanged(user?: UserStateType) {
+    if (user) {
+      this.accountList = [...(user.accounts || [])];
+    }
+  }
+
   editSubscription() {
     this.savedModal = false;
 
     // update
     if (this.isSubscribed) {
-      //
+      const { currentAccount } = this;
+      const pos = this.users.indexOf(currentAccount);
+
+      if (currentAccount && pos > -1) {
+        this.users.splice(pos, 1, {
+          id: currentAccount.id,
+          user: currentAccount.user,
+          accountIds: this.accountIds,
+          teamId: String(this.teamId),
+        });
+      }
     } else {
       // create
       this.users.push({
@@ -215,6 +212,8 @@ class RaidEx extends Vue {
     this.accountList.push(newAccount);
     this.accountIds.push(newAccount.id);
     this.newAccount = '';
+
+    this.$store.commit('user/setAccounts', this.accountList);
   }
 
   removeAccount() {
@@ -236,6 +235,8 @@ class RaidEx extends Vue {
     this.accountList.splice(pos, 1);
 
     this.accountToRemove = '';
+
+    this.$store.commit('user/setAccounts', this.accountList);
   }
 
   @Prop({ type: String, required: true })

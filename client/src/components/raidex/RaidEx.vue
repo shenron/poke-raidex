@@ -1,15 +1,19 @@
 <template>
   <v-card max-width="344" class="mx-auto">
     <v-card-title>
+      <v-btn
+        icon
+        v-if="isSubscribed"
+        :color="hasBeenChanged ? 'orange' : 'green'"
+        dark
+      >
+        <v-icon dark>mdi-checkbox-marked-circle</v-icon>
+      </v-btn>
+
       <v-tooltip right>
         <template v-slot:activator="{ on }">
           <v-badge>
-            <span>
-              <v-btn icon v-if="isSubscribed" class="ma-2" color="green" dark>
-                <v-icon dark>mdi-checkbox-marked-circle</v-icon>
-              </v-btn>
-              {{ dateStr }}
-            </span>
+            <span v-text="dateStr"></span>
             <template v-slot:badge
               ><span v-on="on" v-text="usersLength"></span
             ></template>
@@ -138,8 +142,8 @@
         key="dialog-unsubscribe"
       >
         <template v-slot:activator="{ on }">
-          <v-btn class="ma-2" dark v-on="on" color="red">
-            <v-icon dark>mdi-cancel</v-icon>
+          <v-btn class="ma-2" v-on="on">
+            <v-icon dark>mdi-exit-to-app</v-icon>
           </v-btn>
         </template>
         <v-card>
