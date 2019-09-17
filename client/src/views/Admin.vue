@@ -81,7 +81,7 @@
         </v-sheet>
 
         <small v-if="eventToUpdate">
-          Selection du nouvelle date
+          Selection nouvelle date
           <strong>
             <template v-if="!eventToUpdate.start">
               de début</template
