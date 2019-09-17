@@ -2,25 +2,14 @@
   <v-container>
     <v-layout text-center wrap>
       <v-flex xs12 class="core-goto">
-        <v-img
-          :src="require('../assets/pokemon_center.png')"
-          class="my-3"
-          contain
-          height="164"
-        ></v-img>
+        <v-img :src="require('../assets/pokemon_center.png')" class="my-3" contain height="164"></v-img>
       </v-flex>
     </v-layout>
 
     <v-row class="fill-height">
       <v-col sm="12" lg="3">
         <form>
-          <v-select
-            v-model="arenaId"
-            item-value="id"
-            item-text="label"
-            :items="arenaList"
-            label="Arène"
-          ></v-select>
+          <v-select v-model="arenaId" item-value="id" item-text="label" :items="arenaList" label="Arène"></v-select>
 
           <v-menu
             ref="startEventMenu"
@@ -33,12 +22,7 @@
             offset-y
           >
             <template v-slot:activator="{ on }">
-              <v-text-field
-                v-model="startEvent"
-                label="Debut"
-                readonly
-                v-on="on"
-              >
+              <v-text-field v-model="startEvent" label="Debut" readonly v-on="on">
                 <template v-slot:prepend>
                   <v-icon small>mdi-calendar</v-icon>
                 </template>
@@ -49,26 +33,13 @@
               <v-btn text color="primary" @click="startEventMenu = false">
                 Annuler
               </v-btn>
-              <v-btn
-                text
-                color="primary"
-                @click="$refs.startEventMenu.save(startEvent)"
-              >
+              <v-btn text color="primary" @click="$refs.startEventMenu.save(startEvent)">
                 OK
               </v-btn>
             </v-date-picker>
           </v-menu>
 
-          <v-menu
-            ref="endEventMenu"
-            v-model="endEventMenu"
-            :close-on-content-click="false"
-            :nudge-right="40"
-            :return-value.sync="endEvent"
-            transition="scale-transition"
-            min-width="290px"
-            offset-y
-          >
+          <v-menu ref="endEventMenu" v-model="endEventMenu" :close-on-content-click="false" :nudge-right="40" :return-value.sync="endEvent" transition="scale-transition" min-width="290px" offset-y>
             <template v-slot:activator="{ on }">
               <v-text-field v-model="endEvent" label="Fin" readonly v-on="on">
                 <template v-slot:prepend>
@@ -81,11 +52,7 @@
               <v-btn text color="primary" @click="endEventMenu = false">
                 Annuler
               </v-btn>
-              <v-btn
-                text
-                color="primary"
-                @click="$refs.endEventMenu.save(endEvent)"
-              >
+              <v-btn text color="primary" @click="$refs.endEventMenu.save(endEvent)">
                 OK
               </v-btn>
             </v-date-picker>
@@ -113,6 +80,18 @@
           </v-toolbar>
         </v-sheet>
 
+        <small v-if="eventToUpdate">
+          Selection du nouvelle date
+          <strong>
+            <template v-if="!eventToUpdate.start">
+              de début</template
+            >
+            <template v-else>
+              de fin</template
+            >
+          </strong>
+        </small>
+
         <v-sheet height="600">
           <v-calendar
             ref="calendar"
@@ -128,12 +107,7 @@
             @click:day="updateDateEvent"
             @change="updateRange"
           ></v-calendar>
-          <v-menu
-            v-model="selectedOpen"
-            :close-on-content-click="false"
-            :activator="selectedElement"
-            offset-x
-          >
+          <v-menu v-if="!eventToUpdate" v-model="selectedOpen" :close-on-content-click="false" :activator="selectedElement" offset-x>
             <v-card color="grey lighten-4" min-width="200px" flat>
               <v-toolbar :color="selectedEvent.color" dark>
                 <v-btn icon @click="enableUpdateDateEvent(selectedEvent)">
@@ -219,12 +193,10 @@ class Admin extends Vue {
 
   arenaId: ?number = 0;
 
+  eventDialogHelper: ?boolean = false;
+
   get arenaList() {
-    return [
-      { id: 1, label: 'Chaudron' },
-      { id: 2, label: 'Princesse Pauline' },
-      { id: 3, label: 'Mougins' },
-    ];
+    return [{ id: 1, label: 'Chaudron' }, { id: 2, label: 'Princesse Pauline' }, { id: 3, label: 'Mougins' }];
   }
 
   get title() {
@@ -338,22 +310,27 @@ class Admin extends Vue {
   }
 
   showEvent({ nativeEvent, event }: { nativeEvent: Event, event: Event }) {
+    nativeEvent.stopPropagation();
+    nativeEvent.stopImmediatePropagation();
+
+    if (this.eventToUpdate) {
+      return;
+    }
+
     const open = () => {
       this.selectedEvent = event;
       this.selectedElement = nativeEvent.target;
-      setTimeout(() => {
+      this.$nextTick(() => {
         this.selectedOpen = true;
-      }, 10);
+      });
     };
 
     if (this.selectedOpen) {
       this.selectedOpen = false;
-      setTimeout(open, 10);
+      this.$nextTick(open);
     } else {
       open();
     }
-
-    nativeEvent.stopPropagation();
   }
 
   updateRange({ start, end }: { start: Object, end: Object }) {
@@ -363,9 +340,7 @@ class Admin extends Vue {
   }
 
   nth(d: number) {
-    return d > 3 && d < 21
-      ? 'th'
-      : ['th', 'st', 'nd', 'rd', 'th', 'th', 'th', 'th', 'th', 'th'][d % 10];
+    return d > 3 && d < 21 ? 'th' : ['th', 'st', 'nd', 'rd', 'th', 'th', 'th', 'th', 'th', 'th'][d % 10];
   }
 }
 </script>
