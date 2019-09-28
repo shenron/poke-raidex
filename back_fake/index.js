@@ -3,6 +3,7 @@
 const port = process.env.PORT || 3500;
 
 const express = require('express');
+const history = require('connect-history-api-fallback');
 const session = require('express-session');
 const bodyParser = require('body-parser');
 const multer = require('multer');
@@ -32,12 +33,16 @@ const newSession = session({
 });
 app.use(newSession);
 
+app.use(history());
+
 app.use(
   bodyParser.urlencoded({
     extended: true,
   }),
   bodyParser.json(),
 );
+
+app.use(express.static('dist'));
 
 app.post('/api/auth', (req, res) => {
   res.send({
