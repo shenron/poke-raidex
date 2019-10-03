@@ -2,12 +2,7 @@
   <v-container>
     <v-layout text-center wrap>
       <v-flex xs12>
-        <v-img
-          :src="require('../assets/pokeball.png')"
-          class="my-3"
-          contain
-          height="200"
-        ></v-img>
+        <v-img :src="require('../assets/pokeball.png')" class="my-3" contain height="200"></v-img>
       </v-flex>
 
       <v-flex mb-4>
@@ -20,13 +15,7 @@
       </v-flex>
     </v-layout>
 
-    <v-layout row>
-      <v-flex xs12 md4 v-for="raidExId in raidExList" :key="raidExId">
-        <div class="ma-2 mb-10">
-          <RaidEx :key="raidExId" :id="raidExId" />
-        </div>
-      </v-flex>
-    </v-layout>
+    <UserCalendar />
   </v-container>
 </template>
 
@@ -35,14 +24,14 @@
 
 import { Component, Vue } from 'vue-property-decorator';
 import api from '@/api/raidex';
-import RaidEx from '@/components/raidex/RaidEx.vue';
+import UserCalendar from '@/components/user_calendar/UserCalendar.vue';
 
 const { getRaidExList } = api;
 
 export default
 @Component({
   components: {
-    RaidEx,
+    UserCalendar,
   },
 })
 class Home extends Vue {

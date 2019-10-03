@@ -8,12 +8,12 @@
 
       <v-spacer></v-spacer>
 
-      <v-btn-toggle v-if="user.id">
-        <v-btn v-if="$route.name !== 'home'" color="primary" @click="$router.push({ name: 'home' })" dark>Accueil</v-btn>
+      <v-btn-toggle v-if="user.id" background-color="primary" dark>
+        <v-btn v-if="$route.name !== 'home'" @click="$router.push({ name: 'home' })">Accueil</v-btn>
 
         <v-menu offset-y>
           <template v-slot:activator="{ on }">
-            <v-btn color="primary" dark v-on="on">
+            <v-btn v-on="on">
               {{ user.user }}
             </v-btn>
           </template>
