@@ -11,7 +11,7 @@ const { getRaidEx } = api;
 
 export default
 @Component
-class RaidEx extends Vue {
+class ConfirmSubscription extends Vue {
   leaveDialog: boolean = false;
 
   savedModal: boolean = false;
@@ -38,13 +38,8 @@ class RaidEx extends Vue {
   // model new account
   newAccount: string = '';
 
-  // model account to remove
-  accountToRemove: string = '';
-
   // model - account list
   accountList: Array<{ id: string, label: string }> = [];
-
-  isExtandedMenuDisplayed: boolean = false;
 
   // saved raid ex - users
   users: Array<{
@@ -197,11 +192,6 @@ class RaidEx extends Vue {
     }
   }
 
-  onCloseManageAccount() {
-    this.isExtandedMenuDisplayed = false;
-    this.$refs.accountsSelect.blur();
-  }
-
   applyNewCompte() {
     // fake id,
     const id = String(Math.floor(Math.random() * (100 - 20 + 1) + 20));
@@ -216,14 +206,7 @@ class RaidEx extends Vue {
     this.$store.commit('user/setAccounts', this.accountList);
   }
 
-  removeAccount() {
-    const accLower = this.accountToRemove.toLowerCase();
-
-    const { id } = this.accountList.find(account => account.label.toLowerCase() === accLower) || {};
-    if (!id) {
-      return;
-    }
-
+  removeAccount(id: string) {
     // remove from selected
     let pos = this.accountIds.findIndex(accountId => accountId === id);
     if (pos > -1) {
@@ -233,8 +216,6 @@ class RaidEx extends Vue {
     // remove from the available list
     pos = this.accountList.findIndex(account => account.id === id);
     this.accountList.splice(pos, 1);
-
-    this.accountToRemove = '';
 
     this.$store.commit('user/setAccounts', this.accountList);
   }

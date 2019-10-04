@@ -2,12 +2,12 @@
 
 import { Component, Vue } from 'vue-property-decorator';
 import type { EventType } from '@/definitions/calendar.d';
-import RaidEx from '@/components/raidex/RaidEx.vue';
+import ConfirmSubscription from '@/components/confirm_subscription/ConfirmSubscription.vue';
 
 export default
 @Component({
   components: {
-    RaidEx,
+    ConfirmSubscription,
   },
 })
 class UserCalendar extends Vue {
@@ -20,6 +20,8 @@ class UserCalendar extends Vue {
   selectedElement: ?Object = null;
 
   selectedOpen: boolean = false;
+
+  isMobile: boolean = false;
 
   events: Array<EventType> = [
     {
@@ -37,6 +39,10 @@ class UserCalendar extends Vue {
       color: 'blue',
     },
   ];
+
+  get width() {
+    return this.isMobile ? '100%' : 400;
+  }
 
   get type() {
     return 'month';
@@ -64,6 +70,21 @@ class UserCalendar extends Vue {
     }
 
     return `${startMonth} ${startYear}`;
+  }
+
+  beforeDestroy() {
+    if (typeof window !== 'undefined') {
+      window.removeEventListener('resize', this.onResize, { passive: true });
+    }
+  }
+
+  mounted() {
+    this.onResize();
+    window.addEventListener('resize', this.onResize, { passive: true });
+  }
+
+  onResize() {
+    this.isMobile = window.innerWidth < 600;
   }
 
   getEventColor(event: Object) {
