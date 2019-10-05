@@ -49,7 +49,7 @@ app.post('/api/auth', (req, res) => {
     user: req.body.user,
     id: '1',
     type: req.body.user === 'admin' ? 'ADMIN' : 'OTHER',
-    accounts: [{ id: '2', label: 'Martine' }, { id: '3', label: 'Gilberte' }, { id: '4', label: 'Morice' }, { id: '5', label: 'Other' }],
+    accounts: [{ id: '2', label: 'Martine' }, { id: '3', label: 'Gilberte' }, { id: '4', label: 'Maurice' }, { id: '5', label: 'Other' }],
   });
 });
 

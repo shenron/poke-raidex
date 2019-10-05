@@ -19,26 +19,13 @@ class ConfirmSubscription extends Vue {
   // model team
   teamId: ?number = null;
 
-  get teamColor() {
-    if (!this.teamId) {
-      return '';
-    }
-
-    const team = this.teams.find(_team => _team.id === this.teamId);
-    if (!team) {
-      return '';
-    }
-
-    return team.color;
-  }
-
   // model sub accounts
   accountIds: Array<string> = [];
 
   // model new account
   newAccount: string = '';
 
-  // model - account list
+  // accounts available
   accountList: Array<{ id: string, label: string }> = [];
 
   // saved raid ex - users
@@ -73,12 +60,7 @@ class ConfirmSubscription extends Vue {
 
   // user changes something, need to save
   get hasBeenChanged() {
-    const user = this.currentAccount;
-    if (!user) {
-      return false;
-    }
-
-    return JSON.stringify(user.accountIds) !== JSON.stringify(this.accountIds) || user.teamId !== this.teamId;
+    return true;
   }
 
   get userStore() {
