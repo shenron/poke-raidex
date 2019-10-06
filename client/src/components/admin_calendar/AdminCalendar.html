@@ -2,86 +2,106 @@
   <v-col sm="12"
     lg="3">
     <form>
+      <v-select v-model="eventType"
+        item-value="id"
+        item-text="label"
+        :items="eventTypes"
+        label="Types"></v-select>
+
       <v-select v-model="arenaId"
         item-value="id"
         item-text="label"
         :items="arenaList"
         label="Arène"></v-select>
 
-      <v-menu ref="startEventMenu"
-        v-model="startEventMenu"
-        :close-on-content-click="false"
-        :nudge-right="40"
-        :return-value.sync="startEvent"
-        transition="scale-transition"
-        min-width="290px"
-        offset-y>
-        <template v-slot:activator="{ on }">
-          <v-text-field v-model="startEvent"
-            label="Debut"
-            readonly
-            v-on="on">
-            <template v-slot:prepend>
-              <v-icon small>mdi-calendar</v-icon>
-            </template>
-          </v-text-field>
-        </template>
-        <v-date-picker v-model="startEvent"
-          no-title
-          scrollable>
-          <div class="flex-grow-1"></div>
-          <v-btn text
-            color="primary"
-            @click="startEventMenu = false">
-            Annuler
-          </v-btn>
-          <v-btn text
-            color="primary"
-            @click="$refs.startEventMenu.save(startEvent)">
-            OK
-          </v-btn>
-        </v-date-picker>
-      </v-menu>
+      <template v-if="eventType">
+        <v-menu ref="startEventMenu"
+          v-model="startEventMenu"
+          :close-on-content-click="false"
+          :nudge-right="40"
+          :return-value.sync="startEvent"
+          transition="scale-transition"
+          min-width="290px"
+          offset-y>
+          <template v-slot:activator="{ on }">
+            <v-text-field v-model="startEvent"
+              :label="eventType === 1 ? 'Date' : 'Début'"
+              readonly
+              v-on="on">
+              <template v-slot:prepend>
+                <v-icon small>mdi-calendar</v-icon>
+              </template>
+            </v-text-field>
+          </template>
+          <v-date-picker v-model="startEvent"
+            no-title
+            scrollable>
+            <div class="flex-grow-1"></div>
+            <v-btn text
+              color="primary"
+              @click="startEventMenu = false">
+              Annuler
+            </v-btn>
+            <v-btn text
+              color="primary"
+              @click="$refs.startEventMenu.save(startEvent)">
+              OK
+            </v-btn>
+          </v-date-picker>
+        </v-menu>
 
-      <v-menu ref="endEventMenu"
-        v-model="endEventMenu"
-        :close-on-content-click="false"
-        :nudge-right="40"
-        :return-value.sync="endEvent"
-        transition="scale-transition"
-        min-width="290px"
-        offset-y>
-        <template v-slot:activator="{ on }">
-          <v-text-field v-model="endEvent"
-            label="Fin"
-            readonly
-            v-on="on">
-            <template v-slot:prepend>
-              <v-icon small>mdi-calendar</v-icon>
-            </template>
-          </v-text-field>
-        </template>
-        <v-date-picker v-model="endEvent"
-          no-title
-          scrollable>
-          <div class="flex-grow-1"></div>
-          <v-btn text
-            color="primary"
-            @click="endEventMenu = false">
-            Annuler
-          </v-btn>
-          <v-btn text
-            color="primary"
-            @click="$refs.endEventMenu.save(endEvent)">
-            OK
-          </v-btn>
-        </v-date-picker>
-      </v-menu>
+        <v-text-field v-if="eventType === 1"
+          v-model="hourEvent"
+          :rules="hourEventRules"
+          label="Heure"
+          placeholder="13:30">
+          <template v-slot:prepend>
+            <v-icon small>mdi-calendar</v-icon>
+          </template>
+        </v-text-field>
 
-      <v-btn @click="addEvent"
-        color="primary">
-        Ajouter
-      </v-btn>
+        <v-menu v-if="eventType === 2"
+          ref="endEventMenu"
+          v-model="endEventMenu"
+          :close-on-content-click="false"
+          :nudge-right="40"
+          :return-value.sync="endEvent"
+          transition="scale-transition"
+          min-width="290px"
+          offset-y>
+          <template v-slot:activator="{ on }">
+            <v-text-field v-model="endEvent"
+              label="Fin"
+              readonly
+              v-on="on">
+              <template v-slot:prepend>
+                <v-icon small>mdi-calendar</v-icon>
+              </template>
+            </v-text-field>
+          </template>
+          <v-date-picker v-model="endEvent"
+            no-title
+            scrollable>
+            <div class="flex-grow-1"></div>
+            <v-btn text
+              color="primary"
+              @click="endEventMenu = false">
+              Annuler
+            </v-btn>
+            <v-btn text
+              color="primary"
+              @click="$refs.endEventMenu.save(endEvent)">
+              OK
+            </v-btn>
+          </v-date-picker>
+        </v-menu>
+
+        <v-btn @click="addEvent"
+          color="primary"
+          :disabled="!isValidForm">
+          Ajouter
+        </v-btn>
+      </template>
     </form>
   </v-col>
 
@@ -128,7 +148,7 @@
         :event-color="getEventColor"
         :event-margin-bottom="3"
         :now="today"
-        :type="type"
+        :type="calendarType"
         @click:event="showEvent"
         @click:date="updateDateEvent"
         @click:day="updateDateEvent"
@@ -143,7 +163,7 @@
           flat>
           <v-toolbar :color="selectedEvent.color"
             dark>
-            <v-btn icon
+            <v-btn v-if="selectedEvent.type === 2" icon
               @click="enableUpdateDateEvent(selectedEvent)">
               <v-icon>mdi-pencil</v-icon>
             </v-btn>

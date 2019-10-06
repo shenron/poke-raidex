@@ -30,13 +30,16 @@ class AdminCalendar extends Vue {
 
   eventToUpdate: ?EventType = null;
 
+  eventType: ?number = null;
+
   events: Array<EventType> = [
     {
-      id: 1,
+      id: 2,
       name: 'Chaudron',
       start: '2018-12-29',
       end: '2019-01-01',
       color: 'deep-purple',
+      type: 1,
     },
     {
       id: 2,
@@ -44,6 +47,7 @@ class AdminCalendar extends Vue {
       start: '2018-12-31',
       end: '2019-01-04',
       color: 'blue',
+      type: 2,
     },
   ];
 
@@ -51,7 +55,20 @@ class AdminCalendar extends Vue {
 
   eventDialogHelper: ?boolean = false;
 
-  get type() {
+  // used for info event
+  hourEvent: ?string = null;
+
+  get eventTypes() {
+    return [{
+      id: 1,
+      label: 'Info',
+    }, {
+      id: 2,
+      label: 'Inscription',
+    }];
+  }
+
+  get calendarType() {
     return 'month';
   }
 
@@ -85,6 +102,25 @@ class AdminCalendar extends Vue {
       timeZone: 'UTC',
       month: 'long',
     });
+  }
+
+  get hourEventRules() {
+    const err = 'ex: 13h30';
+    return [(value: ?string) => {
+      if (!value) {
+        return err;
+      }
+      return value.match(/^[0-9]{1,2}:[0-9]{1,2}$/g) ? true : err;
+    }];
+  }
+
+  get isValidForm() {
+    let isValid = !!this.eventType && this.arenaId;
+    if (this.eventType === 1) {
+      isValid = isValid && this.startEvent && this.hourEventRules.reduce((acc, v) => acc && v(this.hourEvent) === true, true);
+    }
+
+    return isValid && this.startEvent && this.endEvent;
   }
 
   onCancelEvent(eventToDelete: EventType) {
@@ -133,6 +169,7 @@ class AdminCalendar extends Vue {
       start: this.startEvent,
       end: this.endEvent,
       color: this.eventColors[this.arenaId] || 'grey',
+      type: this.eventType,
     });
   }
 
