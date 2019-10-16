@@ -12,29 +12,36 @@ const { getRaidEx } = api;
 export default
 @Component
 class ConfirmSubscription extends Vue {
+  // toggle the dialog to unsubscribe
   leaveDialog: boolean = false;
 
+  // toggle the dialog to save
   savedModal: boolean = false;
 
-  // model team
-  teamId: ?number = null;
-
-  // model sub accounts
-  accountIds: Array<string> = [];
-
-  // model new account
+  // model new account, it will be pused in the list of `accountLists`
   newAccount: string = '';
 
-  // accounts available
+  // accounts available for the connected user
   accountList: Array<{ id: string, label: string }> = [];
+
+  // first row, when it's set it will be pushed in `userEvents`
+  userEvent: {|teamId: string, userId: string |} = {
+    teamId: '',
+    userId: '',
+  };
 
   // saved raid ex - users
   users: Array<{
     id: string,
     user: string,
-    accountIds: Array<string>,
+    subscriptions: Array<{| userId: string, teamId: string |}>,
     teamId: string,
   }> = [];
+
+  userEvents: Array<{|
+    teamId: string,
+    accountId: string,
+  |}> = [];
 
   // saved raid ex - start
   start: ?string = null;
@@ -102,11 +109,11 @@ class ConfirmSubscription extends Vue {
   }
 
   get usersLength() {
-    return this.users.reduce((a, b) => a + b.accountIds.length, 0);
+    return this.users.reduce((a, b) => a + b.subscriptions.length, 0);
   }
 
   get isValidForm() {
-    return this.teamId !== null && this.accountIds.length > 0;
+    return false;
   }
 
   async created() {
@@ -116,20 +123,25 @@ class ConfirmSubscription extends Vue {
     this.start = data.start;
     this.end = data.end;
     this.areaId = data.areaId;
+    this.userEvent.userId = this.userStore.id;
   }
 
   @Watch('currentAccount', { deep: true })
   onCurrentAccountChanged(currentAccount?: { id: string, accountIds: Array<string>, teamId: number }) {
     if (currentAccount) {
-      this.accountIds = currentAccount.accountIds;
-      this.teamId = currentAccount.teamId;
+      this.userEvent.userId = currentAccount.id;
     }
   }
 
   @Watch('$store.state.user', { deep: true, immediate: true })
   onStoreUserChanged(user?: UserStateType) {
-    if (user) {
-      this.accountList = [...(user.accounts || [])];
+    if (user && user.id) {
+      this.accountList = [{
+        id: user.id,
+        label: user.user,
+      },
+      ...(user.accounts || []),
+      ];
     }
   }
 
@@ -137,27 +149,27 @@ class ConfirmSubscription extends Vue {
     this.savedModal = false;
 
     // update
-    if (this.isSubscribed) {
-      const { currentAccount } = this;
-      const pos = this.users.indexOf(currentAccount);
+    // if (this.isSubscribed) {
+    //   const { currentAccount } = this;
+    //   const pos = this.users.indexOf(currentAccount);
 
-      if (currentAccount && pos > -1) {
-        this.users.splice(pos, 1, {
-          id: currentAccount.id,
-          user: currentAccount.user,
-          accountIds: this.accountIds,
-          teamId: String(this.teamId),
-        });
-      }
-    } else {
-      // create
-      this.users.push({
-        id: this.$store.state.user.id,
-        user: this.$store.state.user.user,
-        accountIds: this.accountIds,
-        teamId: String(this.teamId),
-      });
-    }
+    //   if (currentAccount && pos > -1) {
+    //     this.users.splice(pos, 1, {
+    //       id: currentAccount.id,
+    //       user: currentAccount.user,
+    //       accountIds: this.accountIds,
+    //       teamId: String(this.teamId),
+    //     });
+    //   }
+    // } else {
+    //   // create
+    //   this.users.push({
+    //     id: this.$store.state.user.id,
+    //     user: this.$store.state.user.user,
+    //     accountIds: this.accountIds,
+    //     teamId: String(this.teamId),
+    //   });
+    // }
   }
 
   unsubscribe() {

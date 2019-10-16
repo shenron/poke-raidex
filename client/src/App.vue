@@ -11,7 +11,7 @@
       <v-btn-toggle v-if="user.id" background-color="primary" dark>
         <v-btn v-if="$route.name !== 'home'" @click="$router.push({ name: 'home' })">Accueil</v-btn>
 
-        <v-menu offset-y>
+        <v-menu v-if="user.type === 'ADMIN'" offset-y>
           <template v-slot:activator="{ on }">
             <v-btn v-on="on">
               {{ user.user }}
@@ -19,7 +19,6 @@
           </template>
           <v-list>
             <v-list-item
-              v-if=" user.type === 'ADMIN'"
               @click="$router.push({ name: 'admin' })"
               :disabled="$route.name === 'admin'"
             >

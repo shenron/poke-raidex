@@ -6,5 +6,5 @@ export type EventType = {|
   start: ?string,
   end: ?string,
   color: string,
-  type : 1 | 2,
+  type : number,
 |};

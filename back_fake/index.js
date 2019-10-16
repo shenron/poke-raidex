@@ -60,14 +60,20 @@ const events = [
       {
         id: '10',
         user: 'Toto',
-        accountIds: ['2', '3', '4'],
-        teamId: '1',
+        subscriptions: [
+          { userId: '10', teamId: 1 },
+          { userId: '2', teamId: 1 },
+          { userId: '3', teamId: 1 },
+          { userId: '4', teamId: 1 }
+        ],
       },
       {
         id: '20',
         user: 'Tata',
-        accountIds: ['5'],
-        teamId: '1',
+        subscriptions: [
+          { userId: '20', teamId: 1},
+          { userId: '5', teamId: 1 }
+        ],
       },
     ],
     start: '2019-01-08',

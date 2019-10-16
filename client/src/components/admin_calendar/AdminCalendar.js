@@ -169,7 +169,7 @@ class AdminCalendar extends Vue {
       start: this.startEvent,
       end: this.endEvent,
       color: this.eventColors[this.arenaId] || 'grey',
-      type: this.eventType,
+      type: this.eventType || 0,
     });
   }
 

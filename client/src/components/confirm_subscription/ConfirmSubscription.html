@@ -22,73 +22,74 @@
   <v-card-text>
     <p v-text="areaLabel"></p>
 
-    <v-row v-for="i in 3"
-      :key="i"
-      class="text--primary">
-      <v-col cols="3"
-        class="pt-6">
-        <v-btn x-small
-          class="mr-2"
-          fab>
-          <v-icon dark>mdi-minus</v-icon>
-        </v-btn>
+    <template v-if="userEvents.length">
+      <v-row v-for="userEvent in userEvents"
+        :key="i"
+        class="text--primary">
+        <v-col cols="3"
+          class="pt-6">
+          <v-btn x-small
+            class="mr-2"
+            fab>
+            <v-icon dark>mdi-minus</v-icon>
+          </v-btn>
 
-        <v-btn x-small
-          fab>
-          <v-icon dark>mdi-delete</v-icon>
-        </v-btn>
-      </v-col>
+          <v-btn x-small
+            fab>
+            <v-icon dark>mdi-delete</v-icon>
+          </v-btn>
+        </v-col>
 
-      <v-col md="5">
-        <v-select :items="accountList"
-          item-value="id"
-          item-text="label"
-          label="Compte"
-          persistent-hint
-          ref="accountsSelect"></v-select>
-      </v-col>
+        <v-col md="5">
+          <v-select :items="accountList"
+            item-value="id"
+            item-text="label"
+            label="Compte"
+            persistent-hint></v-select>
+        </v-col>
 
-      <v-col md="4">
-        <v-select :items="teams"
-          item-text="label"
-          item-value="id"
-          label="Chez les"></v-select>
-      </v-col>
-    </v-row>
+        <v-col md="4">
+          <v-select :items="teams"
+            item-text="label"
+            item-value="id"
+            label="Chez les"></v-select>
+        </v-col>
+      </v-row>
+    </template>
 
-    <v-row class="text--primary">
-      <v-col cols="3"
-        class="pt-6">
-        <v-btn x-small
-          class="mr-2"
-          fab>
-          <v-icon dark>mdi-minus</v-icon>
-        </v-btn>
+    <template v-else>
+      <v-row class="text--primary">
+        <v-col cols="3"
+          class="pt-6">
+          <v-btn x-small
+            class="mr-2"
+            fab>
+            <v-icon dark>mdi-minus</v-icon>
+          </v-btn>
 
-        <v-btn x-small
-          fab>
-          <v-icon dark>mdi-delete</v-icon>
-        </v-btn>
-      </v-col>
+          <v-btn x-small
+            fab>
+            <v-icon dark>mdi-delete</v-icon>
+          </v-btn>
+        </v-col>
 
-      <v-col md="5">
-        <v-select :value="null"
-          :items="accountList"
-          item-value="id"
-          item-text="label"
-          label="Compte"
-          persistent-hint
-          ref="accountsSelect"></v-select>
-      </v-col>
+        <v-col md="5">
+          <v-select v-model="userEvent.userId"
+            :items="accountList"
+            item-value="id"
+            item-text="label"
+            label="Compte"
+            persistent-hint></v-select>
+        </v-col>
 
-      <v-col md="4">
-        <v-select :value="null"
-          :items="teams"
-          item-text="label"
-          item-value="id"
-          label="Chez les"></v-select>
-      </v-col>
-    </v-row>
+        <v-col md="4">
+          <v-select :items="teams"
+            item-text="label"
+            item-value="id"
+            label="Chez les"></v-select>
+        </v-col>
+      </v-row>
+    </template>
 
     <!-- free sub accoun -->
     <v-row class="text--primary">
@@ -102,7 +103,8 @@
       </v-col>
 
       <v-col md="5">
-        <v-text-field label="Compte"></v-text-field>
+        <v-text-field v-model="newAccount"
+          label="Compte"></v-text-field>
       </v-col>
 
       <v-col md="4">

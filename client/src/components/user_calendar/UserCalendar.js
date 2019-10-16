@@ -30,6 +30,7 @@ class UserCalendar extends Vue {
       start: '2018-12-29',
       end: '2019-01-01',
       color: 'deep-purple',
+      type: 1,
     },
     {
       id: 2,
@@ -37,6 +38,7 @@ class UserCalendar extends Vue {
       start: '2018-12-31',
       end: '2019-01-04',
       color: 'blue',
+      type: 2,
     },
   ];
 
