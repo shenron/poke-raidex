@@ -64,7 +64,7 @@ class App extends Vue {
 <style lang="scss">
 main {
   background-color: #fff;
-  background-image: url('~/bg-kyurem.jpg');
+  background-image: url('~@/assets/bg-kyurem.jpg');
   background-position: right bottom;
   background-repeat: no-repeat;
   background-size: 20%;
