@@ -2,6 +2,7 @@
 
 import { Vue } from 'vue-property-decorator';
 import api from '@/api/user';
+import type { IdLabelType } from '@/definitions/IdLabel.d';
 
 const userLocalStorage = localStorage.getItem('user');
 
@@ -9,7 +10,7 @@ export type UserStateType = {|
   id: ?string,
   user: string,
   type: ?string,
-  accounts: Array<{ id: string, label: string}>,
+  accounts: Array<IdLabelType>,
 |};
 
 const state: UserStateType = userLocalStorage ? JSON.parse(userLocalStorage) : {
@@ -55,7 +56,7 @@ const mutations = {
 
     localStorage.setItem('user', JSON.stringify(_state));
   },
-  setAccounts(_state: UserStateType, accounts: Array<{ id: string, label: string}>) {
+  setAccounts(_state: UserStateType, accounts: Array<IdLabelType>) {
     _state.accounts = accounts;
 
     localStorage.setItem('user', JSON.stringify(_state));

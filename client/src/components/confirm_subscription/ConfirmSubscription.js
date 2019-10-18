@@ -6,6 +6,12 @@ import {
 import api from '@/api/raidex';
 import monthNames from '@/_base/monthNames';
 import type { UserStateType } from '@/store/modules/user';
+import type { IdLabelType } from '@/definitions/IdLabel.d';
+
+type UserEventType = {|
+  accountId: string,
+  teamId: string,
+|};
 
 const { getRaidEx } = api;
 
@@ -22,13 +28,7 @@ class ConfirmSubscription extends Vue {
   newAccount: string = '';
 
   // accounts available for the connected user
-  accountList: Array<{ id: string, label: string }> = [];
-
-  // first row, when it's set it will be pushed in `userEvents`
-  userEvent: {|teamId: string, userId: string |} = {
-    teamId: '',
-    userId: '',
-  };
+  accountList: Array<IdLabelType> = [];
 
   // saved raid ex - users
   users: Array<{
@@ -38,10 +38,8 @@ class ConfirmSubscription extends Vue {
     teamId: string,
   }> = [];
 
-  userEvents: Array<{|
-    teamId: string,
-    accountId: string,
-  |}> = [];
+
+  userEvents: Array<UserEventType> = [];
 
   // saved raid ex - start
   start: ?string = null;
@@ -51,6 +49,31 @@ class ConfirmSubscription extends Vue {
 
   // saved raid ex - area id
   areaId: ?string = null;
+
+  /**
+   * It's not possible to have dupplicate team
+   */
+  getDistinctTeams(userEvent: UserEventType): Array<IdLabelType> {
+    // from `teams` substract already used team from `userEvents`
+    // ignore current userEvent
+    return this.teams
+      .filter(
+        team => !this.userEvents
+          .filter(_userEvent => _userEvent !== userEvent)
+          .find(_userEvent => _userEvent.teamId === team.id),
+      );
+  }
+
+  getDistinctAccounts(userEvent: UserEventType): Array<IdLabelType> {
+    // from `accountList` substract already used team from `userEvents`
+    // ignore current userEvent
+    return this.accountList
+      .filter(
+        account => !this.userEvents
+          .filter(_userEvent => _userEvent !== userEvent)
+          .find(_userEvent => _userEvent.accountId === account.id),
+      );
+  }
 
   get areas() {
     return this.$store.state.raidex.areas;
@@ -123,13 +146,18 @@ class ConfirmSubscription extends Vue {
     this.start = data.start;
     this.end = data.end;
     this.areaId = data.areaId;
-    this.userEvent.userId = this.userStore.id;
+    this.userEvents.push({ accountId: this.userStore.id, teamId: '' });
   }
 
-  @Watch('currentAccount', { deep: true })
-  onCurrentAccountChanged(currentAccount?: { id: string, accountIds: Array<string>, teamId: number }) {
-    if (currentAccount) {
-      this.userEvent.userId = currentAccount.id;
+  @Watch('userEvents', { deep: true })
+  onUserEventsChanged(userEvents: Array<UserEventType>) {
+    if (!userEvents.length) {
+      return;
+    }
+
+    const lastUserEvent = userEvents[userEvents.length - 1];
+    if (lastUserEvent.accountId && lastUserEvent.teamId) {
+      userEvents.push({ accountId: '', teamId: '' });
     }
   }
 
@@ -186,7 +214,7 @@ class ConfirmSubscription extends Vue {
     }
   }
 
-  applyNewCompte() {
+  applyNewSubAccount() {
     // fake id,
     const id = String(Math.floor(Math.random() * (100 - 20 + 1) + 20));
     const newAccount = {
