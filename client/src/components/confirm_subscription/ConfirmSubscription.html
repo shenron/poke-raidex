@@ -51,7 +51,7 @@
 
       <v-col md="4">
         <v-select v-model="userEvent.teamId"
-          :items="getDistinctTeams(userEvent)"
+          :items="teams"
           item-text="label"
           item-value="id"
           label="Chez les"></v-select>
@@ -71,7 +71,7 @@
 
       <v-col md="4">
         <v-select v-model="freeAccountTeamId"
-          :items="getDistinctTeams(null)"
+          :items="teams"
           item-text="label"
           item-value="id"
           label="Chez les"></v-select>

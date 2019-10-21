@@ -52,20 +52,6 @@ class ConfirmSubscription extends Vue {
   // saved raid ex - area id
   areaId: ?string = null;
 
-  /**
-   * It's not possible to have dupplicate team
-   */
-  getDistinctTeams(userEvent: UserEventType): Array<IdLabelType> {
-    // from `teams` substract already used team from `userEvents`
-    // ignore current userEvent
-    return this.teams
-      .filter(
-        team => !this.userEvents
-          .filter(_userEvent => _userEvent !== userEvent)
-          .find(_userEvent => _userEvent.teamId === team.id),
-      );
-  }
-
   getDistinctAccounts(userEvent: UserEventType): Array<IdLabelType> {
     // from `accountList` substract already used team from `userEvents`
     // ignore current userEvent
@@ -175,6 +161,9 @@ class ConfirmSubscription extends Vue {
         accountId: newAccount.id,
         teamId: freeAccount.teamId,
       });
+
+      this.freeAccount = '';
+      this.freeAccountTeamId = '';
     }
   }
 
@@ -251,9 +240,6 @@ class ConfirmSubscription extends Vue {
     };
 
     this.accountList.push({ id, label: newAccountLabel });
-
-    this.freeAccount = '';
-    this.freeAccountTeamId = '';
 
     this.$store.commit('user/setAccounts', this.accountList);
 
