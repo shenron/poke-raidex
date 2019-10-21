@@ -27,7 +27,7 @@
       class="text--primary">
       <v-col cols="3"
         class="pt-6">
-        <v-btn @click="userEvents.splice(i, 1)"
+        <v-btn @click="removeUserEvent(i)"
           x-small
           class="mr-2"
           fab>
@@ -62,20 +62,16 @@
     <v-row class="text--primary">
       <v-col cols="3"
         class="pt-6">
-        <v-btn x-small
-          class="mr-2"
-          fab>
-          <v-icon dark>mdi-plus</v-icon>
-        </v-btn>
       </v-col>
 
       <v-col md="5">
-        <v-text-field v-model="newAccount"
-          label="Compte"></v-text-field>
+        <v-text-field v-model="freeAccount"
+          label="Nouveau compte"></v-text-field>
       </v-col>
 
       <v-col md="4">
-        <v-select :items="getDistinctTeams(null)"
+        <v-select v-model="freeAccountTeamId"
+          :items="getDistinctTeams(null)"
           item-text="label"
           item-value="id"
           label="Chez les"></v-select>

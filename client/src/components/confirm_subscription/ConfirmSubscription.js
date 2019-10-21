@@ -25,7 +25,10 @@ class ConfirmSubscription extends Vue {
   savedModal: boolean = false;
 
   // model new account, it will be pused in the list of `accountLists`
-  newAccount: string = '';
+  freeAccount: string = '';
+
+  // model team of new account, it will be pused in the list of `accountLists`
+  freeAccountTeamId: string = '';
 
   // accounts available for the connected user
   accountList: Array<IdLabelType> = [];
@@ -37,7 +40,6 @@ class ConfirmSubscription extends Vue {
     subscriptions: Array<{| userId: string, teamId: string |}>,
     teamId: string,
   }> = [];
-
 
   userEvents: Array<UserEventType> = [];
 
@@ -73,6 +75,15 @@ class ConfirmSubscription extends Vue {
           .filter(_userEvent => _userEvent !== userEvent)
           .find(_userEvent => _userEvent.accountId === account.id),
       );
+  }
+
+  removeUserEvent(i: number) {
+    if (this.userEvents.length === 1) {
+      this.userEvents[0].accountId = '';
+      this.userEvents[0].teamId = '';
+    } else {
+      this.userEvents.splice(i, 1);
+    }
   }
 
   get areas() {
@@ -136,7 +147,14 @@ class ConfirmSubscription extends Vue {
   }
 
   get isValidForm() {
-    return false;
+    return !!this.userEvents.find(userEvent => userEvent.accountId && userEvent.teamId);
+  }
+
+  get freeUserEvent(): UserEventType {
+    return {
+      accountId: this.freeAccount,
+      teamId: this.freeAccountTeamId,
+    };
   }
 
   async created() {
@@ -147,6 +165,17 @@ class ConfirmSubscription extends Vue {
     this.end = data.end;
     this.areaId = data.areaId;
     this.userEvents.push({ accountId: this.userStore.id, teamId: '' });
+  }
+
+  @Watch('freeUserEvent')
+  async onWatchNewAccountChanged(freeAccount: UserEventType) {
+    if (freeAccount.accountId && freeAccount.teamId) {
+      const newAccount = await this.createSubAccount(freeAccount.accountId);
+      this.userEvents.splice(this.userEvents.length - 1, 1, {
+        accountId: newAccount.id,
+        teamId: freeAccount.teamId,
+      });
+    }
   }
 
   @Watch('userEvents', { deep: true })
@@ -185,7 +214,7 @@ class ConfirmSubscription extends Vue {
     //     this.users.splice(pos, 1, {
     //       id: currentAccount.id,
     //       user: currentAccount.user,
-    //       accountIds: this.accountIds,
+    //       subscriptions: this.accountIds,
     //       teamId: String(this.teamId),
     //     });
     //   }
@@ -194,7 +223,7 @@ class ConfirmSubscription extends Vue {
     //   this.users.push({
     //     id: this.$store.state.user.id,
     //     user: this.$store.state.user.user,
-    //     accountIds: this.accountIds,
+    //     subscriptions: this.accountIds,
     //     teamId: String(this.teamId),
     //   });
     // }
@@ -204,7 +233,6 @@ class ConfirmSubscription extends Vue {
     this.leaveDialog = false;
 
     this.teamId = null;
-    this.accountIds = [];
 
     const { currentAccount } = this;
     const pos = this.users.indexOf(currentAccount);
@@ -214,18 +242,22 @@ class ConfirmSubscription extends Vue {
     }
   }
 
-  applyNewSubAccount() {
+  async createSubAccount(newAccountLabel: string) {
     // fake id,
     const id = String(Math.floor(Math.random() * (100 - 20 + 1) + 20));
     const newAccount = {
       id,
-      label: this.newAccount,
+      label: newAccountLabel,
     };
-    this.accountList.push(newAccount);
-    this.accountIds.push(newAccount.id);
-    this.newAccount = '';
+
+    this.accountList.push({ id, label: newAccountLabel });
+
+    this.freeAccount = '';
+    this.freeAccountTeamId = '';
 
     this.$store.commit('user/setAccounts', this.accountList);
+
+    return Promise.resolve(newAccount);
   }
 
   removeAccount(id: string) {
