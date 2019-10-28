@@ -25,37 +25,39 @@
     <v-row v-for="(userEvent, i) in userEvents"
       :key="userEvent.accountId"
       class="text--primary">
-      <v-col cols="3"
-        class="pt-6">
-        <v-btn @click="removeUserEvent(i)"
-          x-small
-          class="mr-2"
-          fab>
-          <v-icon dark>mdi-minus</v-icon>
-        </v-btn>
+      <template v-if="getDistinctAccounts(userEvent).length">
+        <v-col cols="3"
+          class="pt-6">
+          <v-btn @click="removeUserEvent(i)"
+            x-small
+            class="mr-2"
+            fab>
+            <v-icon dark>mdi-minus</v-icon>
+          </v-btn>
 
-        <v-btn x-small
-          fab>
-          <v-icon dark>mdi-delete</v-icon>
-        </v-btn>
-      </v-col>
+          <v-btn x-small
+            fab>
+            <v-icon dark>mdi-delete</v-icon>
+          </v-btn>
+        </v-col>
 
-      <v-col md="5">
-        <v-select v-model="userEvent.accountId"
-          :items="getDistinctAccounts(userEvent)"
-          item-value="id"
-          item-text="label"
-          label="Compte"
-          persistent-hint></v-select>
-      </v-col>
+        <v-col md="5">
+          <v-select v-model="userEvent.accountId"
+            :items="getDistinctAccounts(userEvent)"
+            item-value="id"
+            item-text="label"
+            label="Compte"
+            persistent-hint></v-select>
+        </v-col>
 
-      <v-col md="4">
-        <v-select v-model="userEvent.teamId"
-          :items="teams"
-          item-text="label"
-          item-value="id"
-          label="Chez les"></v-select>
-      </v-col>
+        <v-col md="4">
+          <v-select v-model="userEvent.teamId"
+            :items="teams"
+            item-text="label"
+            item-value="id"
+            label="Chez les"></v-select>
+        </v-col>
+      </template>
     </v-row>
 
     <!-- free sub accoun -->
@@ -74,6 +76,7 @@
           :items="teams"
           item-text="label"
           item-value="id"
+          :disabled="!freeAccount"
           label="Chez les"></v-select>
       </v-col>
     </v-row>

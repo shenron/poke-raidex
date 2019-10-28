@@ -35,19 +35,8 @@
         :event-margin-bottom="3"
         :now="today"
         :type="type"
-        @click:event="showEvent"
-        @click:date="subscribeEvent"
-        @click:day="subscribeEvent"
+        @click:event="pushRouteEvent"
         @change="updateRange"></v-calendar>
-      <v-menu v-model="selectedOpen"
-        :close-on-content-click="false"
-        :activator="selectedElement"
-        offset-x
-        :min-width="width"
-        :max-width="width">
-        <ConfirmSubscription key="1"
-          id="1" />
-      </v-menu>
     </v-sheet>
   </v-col>
 </v-row>

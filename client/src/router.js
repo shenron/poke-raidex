@@ -3,10 +3,10 @@ import Router from 'vue-router';
 import Home from './views/Home.vue';
 import Login from './views/Login.vue';
 import Admin from './views/admin/Admin.vue';
+import Event from './views/event/Event.vue';
 import store from './store';
 
 Vue.use(Router);
-
 
 const router = new Router({
   mode: 'history',
@@ -16,6 +16,12 @@ const router = new Router({
       path: '/',
       name: 'home',
       component: Home,
+    },
+    {
+      path: '/event/:id',
+      name: 'event',
+      component: Event,
+      props: route => ({ id: route.params.id }),
     },
     {
       path: '/login',

@@ -2,26 +2,13 @@
 
 import { Component, Vue } from 'vue-property-decorator';
 import type { EventType } from '@/definitions/calendar.d';
-import ConfirmSubscription from '@/components/confirm_subscription/ConfirmSubscription.vue';
 
 export default
-@Component({
-  components: {
-    ConfirmSubscription,
-  },
-})
+@Component
 class UserCalendar extends Vue {
   today: string = '2019-01-08';
 
   focus: string = '2019-01-08';
-
-  selectedEvent: Object = {};
-
-  selectedElement: ?Object = null;
-
-  selectedOpen: boolean = false;
-
-  isMobile: boolean = false;
 
   events: Array<EventType> = [
     {
@@ -41,10 +28,6 @@ class UserCalendar extends Vue {
       type: 2,
     },
   ];
-
-  get width() {
-    return this.isMobile ? '100%' : 400;
-  }
 
   get type() {
     return 'month';
@@ -74,31 +57,8 @@ class UserCalendar extends Vue {
     return `${startMonth} ${startYear}`;
   }
 
-  beforeDestroy() {
-    if (typeof window !== 'undefined') {
-      window.removeEventListener('resize', this.onResize, { passive: true });
-    }
-  }
-
-  mounted() {
-    this.onResize();
-    window.addEventListener('resize', this.onResize, { passive: true });
-  }
-
-  onResize() {
-    this.isMobile = window.innerWidth < 600;
-  }
-
   getEventColor(event: Object) {
     return event.color;
-  }
-
-  onCancelSubscription() {
-
-  }
-
-  subscribeEvent() {
-
   }
 
   updateRange({ start, end }: { start: Object, end: Object }) {
@@ -107,24 +67,8 @@ class UserCalendar extends Vue {
     this.endCalendar = end;
   }
 
-  showEvent({ nativeEvent, event }: { nativeEvent: Event, event: Event }) {
-    nativeEvent.stopPropagation();
-    nativeEvent.stopImmediatePropagation();
-
-    const open = () => {
-      this.selectedEvent = event;
-      this.selectedElement = nativeEvent.target;
-      this.$nextTick(() => {
-        this.selectedOpen = true;
-      });
-    };
-
-    if (this.selectedOpen) {
-      this.selectedOpen = false;
-      this.$nextTick(open);
-    } else {
-      open();
-    }
+  pushRouteEvent({ event }: { nativeEvent: Event, event: EventType }) {
+    this.$router.push({ name: 'event', params: { id: event.id } });
   }
 
   setToday() {
