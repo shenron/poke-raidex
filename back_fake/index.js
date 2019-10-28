@@ -6,15 +6,11 @@ const express = require('express');
 const history = require('connect-history-api-fallback');
 const session = require('express-session');
 const bodyParser = require('body-parser');
-const multer = require('multer');
 
 const http = require('http');
-const socketIo = require('socket.io');
 
 const app = express();
 const server = http.createServer(app);
-const io = socketIo(server);
-const upload = multer();
 
 // trust first proxy
 app.set('trust proxy', 1);
