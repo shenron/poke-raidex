@@ -1,21 +1,31 @@
-<div>
-  <ConfirmSubscription :id="id" />
+<v-container>
 
-  <v-bottom-navigation fixed grow :value="activeBtn"
+  <v-layout justify-center>
+    <v-flex xs12
+      md4>
+      <ConfirmSubscription v-if="activeBtn === 'SUBSCRIPTION'" :id="id" />
+
+      <span v-else>List of users</span>
+    </v-flex>
+  </v-layout>
+
+  <v-bottom-navigation fixed
+    grow
+    v-model="activeBtn"
     color="deep-purple accent-4">
-    <v-btn>
-      <span>Recents</span>
+    <v-btn value="HOME">
+      <span>Accueil</span>
       <v-icon>mdi-history</v-icon>
     </v-btn>
 
-    <v-btn>
-      <span>Favorites</span>
-      <v-icon>mdi-heart</v-icon>
+    <v-btn value="LIST">
+      <span>Inscrits</span>
+      <v-icon>mdi-account-multiple</v-icon>
     </v-btn>
 
-    <v-btn>
-      <span>Nearby</span>
-      <v-icon>mdi-map-marker</v-icon>
+    <v-btn value="SUBSCRIPTION">
+      <span>Inscription</span>
+      <v-icon>mdi-settings</v-icon>
     </v-btn>
   </v-bottom-navigation>
-</div>
+</v-container>

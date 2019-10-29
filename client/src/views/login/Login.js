@@ -1,17 +1,3 @@
-<template>
-  <v-row align="center">
-    <v-col>
-      <v-row justify="space-around">
-        <h1>Login</h1>
-      </v-row>
-      <v-row justify="space-around">
-        <LoginForm @logged="$router.push({ name: 'home' })" />
-      </v-row>
-    </v-col>
-  </v-row>
-</template>
-
-<script>
 // @flow
 
 import { Component, Vue } from 'vue-property-decorator';
@@ -40,4 +26,3 @@ class Login extends Vue {
     });
   }
 }
-</script>

@@ -1,0 +1,38 @@
+<v-app>
+  <v-app-bar app>
+    <v-toolbar-title class="headline text-uppercase">
+      <span>Poke RaidEx </span>
+      <span class="font-weight-light">C'est parti!</span>
+    </v-toolbar-title>
+
+    <v-spacer></v-spacer>
+
+    <v-btn-toggle v-if="user.id"
+      background-color="primary"
+      dark>
+      <v-menu offset-y>
+        <template v-slot:activator="{ on }">
+          <v-btn v-on="on">
+            <span v-text="user.user"></span>
+            <v-icon>mdi-dots-vertical</v-icon>
+          </v-btn>
+        </template>
+        <v-list>
+          <v-list-item v-if="user.type === 'ADMIN'"
+            @click="$router.push({ name: 'admin' })"
+            :disabled="$route.name === 'admin'">
+            <v-list-item-title>Administration</v-list-item-title>
+          </v-list-item>
+
+          <v-list-item @click="logOff">
+            <v-list-item-title>Déconnexion</v-list-item-title>
+          </v-list-item>
+        </v-list>
+      </v-menu>
+    </v-btn-toggle>
+  </v-app-bar>
+
+  <v-content class="mt-3">
+    <router-view :key="$route.fullPath"></router-view>
+  </v-content>
+</v-app>
