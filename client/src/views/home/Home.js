@@ -1,6 +1,6 @@
 // @flow
 
-import { Component, Vue } from 'vue-property-decorator';
+import { Component, Vue, Watch } from 'vue-property-decorator';
 import api from '@/api/raidex';
 import UserCalendar from '@/components/user_calendar/UserCalendar.vue';
 
@@ -15,8 +15,11 @@ export default
 class Home extends Vue {
   raidExList: Array<string> = [];
 
-  get activeBtn() {
-    return 1;
+  activeBtn: string = 'HOME';
+
+  @Watch('activeBtn')
+  onActiveBtnChanged(activeBtn: string) {
+    this.$router.push({ name: activeBtn.toLowerCase() });
   }
 
   async created() {

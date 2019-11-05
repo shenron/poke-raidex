@@ -5,7 +5,7 @@
       md4>
       <ConfirmSubscription v-if="activeBtn === 'SUBSCRIPTION'" :id="id" />
 
-      <span v-else>List of users</span>
+      <UserList v-else-if="activeBtn === 'LIST'"/>
     </v-flex>
   </v-layout>
 
@@ -15,17 +15,17 @@
     color="deep-purple accent-4">
     <v-btn value="HOME">
       <span>Accueil</span>
-      <v-icon>mdi-history</v-icon>
-    </v-btn>
-
-    <v-btn value="LIST">
-      <span>Inscrits</span>
-      <v-icon>mdi-account-multiple</v-icon>
+      <v-icon>mdi-home</v-icon>
     </v-btn>
 
     <v-btn value="SUBSCRIPTION">
       <span>Inscription</span>
       <v-icon>mdi-settings</v-icon>
+    </v-btn>
+
+    <v-btn value="LIST">
+      <span>Inscrits</span>
+      <v-icon>mdi-account-multiple</v-icon>
     </v-btn>
   </v-bottom-navigation>
 </v-container>

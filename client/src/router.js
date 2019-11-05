@@ -4,6 +4,7 @@ import Home from './views/home/Home.vue';
 import Login from './views/login/Login.vue';
 import Admin from './views/admin/Admin.vue';
 import Event from './views/event/Event.vue';
+import Settings from './views/settings/Settings.vue';
 import store from './store';
 
 Vue.use(Router);
@@ -22,6 +23,11 @@ const router = new Router({
       name: 'event',
       component: Event,
       props: route => ({ id: route.params.id }),
+    },
+    {
+      path: '/settings',
+      name: 'settings',
+      component: Settings,
     },
     {
       path: '/login',
