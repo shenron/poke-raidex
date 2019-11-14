@@ -50,7 +50,7 @@
           </v-date-picker>
         </v-menu>
 
-        <v-text-field v-if="eventType === 1"
+        <v-text-field v-if="eventType === '1'"
           v-model="hourEvent"
           :rules="hourEventRules"
           label="Heure"
@@ -60,7 +60,7 @@
           </template>
         </v-text-field>
 
-        <v-menu v-if="eventType === 2"
+        <v-menu v-if="eventType === '2'"
           ref="endEventMenu"
           v-model="endEventMenu"
           :close-on-content-click="false"

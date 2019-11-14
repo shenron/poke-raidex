@@ -49,9 +49,18 @@ app.post('/api/auth', (req, res) => {
   });
 });
 
+const eventTypes = [{
+  id: '1',
+  label: 'Info',
+}, {
+  id: '2',
+  label: 'Inscription',
+}];
+
 const events = [
   {
     id: '1',
+    type: '1',
     users: [
       {
         id: '10',
@@ -60,28 +69,29 @@ const events = [
           { userId: '10', teamId: 1 },
           { userId: '2', teamId: 1 },
           { userId: '3', teamId: 1 },
-          { userId: '4', teamId: 1 }
+          { userId: '4', teamId: 1 },
         ],
       },
       {
         id: '20',
         user: 'Tata',
         subscriptions: [
-          { userId: '20', teamId: 1},
-          { userId: '5', teamId: 1 }
+          { userId: '20', teamId: 1 },
+          { userId: '5', teamId: 1 },
         ],
       },
     ],
-    start: '2019-01-08',
-    end: '2019-01-10',
+    start: '2018-12-29',
+    end: '2019-01-01',
     areaId: '1',
   },
   {
     id: '2',
+    type: '2',
     users: [],
     teamId: '2',
-    start: '2019-02-10',
-    end: '2019-02-17',
+    start: '2018-12-31',
+    end: '2019-01-04',
     areaId: '2',
   },
   {
@@ -109,7 +119,7 @@ const teams = [
 ];
 
 app.get('/api/raidex', (req, res) => {
-  res.send(events.map(event => event.id));
+  res.send(events);
 });
 
 app.get('/api/raidex/:id', (req, res) => {
@@ -118,6 +128,10 @@ app.get('/api/raidex/:id', (req, res) => {
 
 app.get('/api/browses/areas', (req, res) => {
   res.send(areas);
+});
+
+app.get('/api/browses/raidex-types', (req, res) => {
+  res.send(eventTypes);
 });
 
 app.get('/api/browses/teams', (req, res) => {

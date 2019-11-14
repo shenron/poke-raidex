@@ -59,13 +59,7 @@ class AdminCalendar extends Vue {
   hourEvent: ?string = null;
 
   get eventTypes() {
-    return [{
-      id: 1,
-      label: 'Info',
-    }, {
-      id: 2,
-      label: 'Inscription',
-    }];
+    return this.$store.state.raidex.types;
   }
 
   get calendarType() {
@@ -77,7 +71,7 @@ class AdminCalendar extends Vue {
   }
 
   get arenaList() {
-    return [{ id: 1, label: 'Chaudron' }, { id: 2, label: 'Princesse Pauline' }, { id: 3, label: 'Mougins' }];
+    return this.$store.state.raidex.areas;
   }
 
   get title() {

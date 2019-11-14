@@ -8,6 +8,8 @@ class App extends Vue {
   created() {
     this.$store.dispatch('raidex/getAreas');
     this.$store.dispatch('raidex/getTeams');
+    this.$store.dispatch('raidex/getTypes');
+    this.$store.dispatch('raidex/getEvents');
   }
 
   get user() {

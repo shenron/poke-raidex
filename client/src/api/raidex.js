@@ -2,6 +2,8 @@
 
 import axios from 'axios';
 
+export type IdLabelType = {| id: string, label: string |};
+
 export type RaidExType = {|
   id: string,
   users: Array<{
@@ -19,13 +21,16 @@ export default {
   getRaidExList(): Promise<Array<RaidExType>> {
     return axios.get('/api/raidex');
   },
-  getRaidEx(id: string) {
+  getRaidEx(id: string): Promise<RaidExType> {
     return axios.get(`/api/raidex/${id}`);
   },
-  getBrowseTeams() {
+  getBrowseTeams(): Promise<Array<IdLabelType>> {
     return axios.get('/api/browses/teams');
   },
-  getBrowseAreas() {
+  getBrowseAreas(): Promise<Array<IdLabelType>> {
     return axios.get('/api/browses/areas');
+  },
+  getBrowseRaidExTypes(): Promise<Array<IdLabelType>> {
+    return axios.get('/api/browses/raidex-types');
   },
 };
