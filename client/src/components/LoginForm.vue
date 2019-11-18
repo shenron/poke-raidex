@@ -46,11 +46,11 @@ class LoginForm extends Vue {
   password: ?string = null;
 
   userRules: Array<(string) => ?(string | boolean)> = [
-    v => !!v || 'Le pseudo est obligatoire!',
+    (v) => !!v || 'Le pseudo est obligatoire!',
   ];
 
   passwordRules: Array<(string) => ?(string | boolean)> = [
-    v => !!v || 'Le mot de passe est obligatoire!',
+    (v) => !!v || 'Le mot de passe est obligatoire!',
   ];
 
   async onSubmit() {

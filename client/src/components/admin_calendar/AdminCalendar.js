@@ -1,6 +1,6 @@
 // @flow
 
-import { Component, Vue } from 'vue-property-decorator';
+import { Component, Vue, Watch } from 'vue-property-decorator';
 import type { EventType } from '@/definitions/calendar.d';
 
 export default
@@ -30,26 +30,9 @@ class AdminCalendar extends Vue {
 
   eventToUpdate: ?EventType = null;
 
-  eventType: ?number = null;
+  eventType: 'INFO' | 'DEFAULT' = 'DEFAULT';
 
-  events: Array<EventType> = [
-    {
-      id: 2,
-      name: 'Chaudron',
-      start: '2018-12-29',
-      end: '2019-01-01',
-      color: 'deep-purple',
-      type: 1,
-    },
-    {
-      id: 2,
-      name: 'Princesse Pauline',
-      start: '2018-12-31',
-      end: '2019-01-04',
-      color: 'blue',
-      type: 2,
-    },
-  ];
+  events: Array<EventType> = [];
 
   arenaId: ?number = 0;
 
@@ -68,6 +51,10 @@ class AdminCalendar extends Vue {
 
   get eventColors(): Array<string> {
     return ['deep-purple', 'blue', 'green'];
+  }
+
+  get eventsStored() {
+    return this.$store.raidex.events;
   }
 
   get arenaList() {
@@ -110,17 +97,22 @@ class AdminCalendar extends Vue {
 
   get isValidForm() {
     let isValid = !!this.eventType && this.arenaId;
-    if (this.eventType === 1) {
+    if (this.eventType === 'INFO') {
       isValid = isValid && this.startEvent && this.hourEventRules.reduce((acc, v) => acc && v(this.hourEvent) === true, true);
     }
 
     return isValid && this.startEvent && this.endEvent;
   }
 
+  @Watch('$store.state.raidex.events', { immediate: true })
+  onEventsStored(events: Array<EventType>) {
+    this.events = [...events];
+  }
+
   onCancelEvent(eventToDelete: EventType) {
     this.selectedOpen = false;
 
-    const pos = this.events.findIndex(event => event.id === eventToDelete.id);
+    const pos = this.events.findIndex((event) => event.id === eventToDelete.id);
     if (pos > -1) {
       this.events.splice(pos, 1);
     }
@@ -145,7 +137,7 @@ class AdminCalendar extends Vue {
   addEvent() {
     let name = '';
     if (this.arenaId) {
-      const arenaFound = this.arenaList.find(arena => arena.id === this.arenaId);
+      const arenaFound = this.arenaList.find((arena) => arena.id === this.arenaId);
       if (arenaFound) {
         name = arenaFound.label;
       }
@@ -163,7 +155,7 @@ class AdminCalendar extends Vue {
       start: this.startEvent,
       end: this.endEvent,
       color: this.eventColors[this.arenaId] || 'grey',
-      type: this.eventType || 0,
+      type: this.eventType || 'DEFAULT',
     });
   }
 
@@ -190,7 +182,7 @@ class AdminCalendar extends Vue {
       if (this.eventToUpdate.start && this.eventToUpdate.end) {
         // save in BD
 
-        const pos = this.events.findIndex(event => event.id === (this.eventToUpdate ? this.eventToUpdate.id : -1));
+        const pos = this.events.findIndex((event) => event.id === (this.eventToUpdate ? this.eventToUpdate.id : -1));
         if (pos === -1) {
           throw Error('Impossible to update the bind event');
         }

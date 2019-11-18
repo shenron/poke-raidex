@@ -57,9 +57,9 @@ class ConfirmSubscription extends Vue {
     // ignore current userEvent
     return this.accountList
       .filter(
-        account => !this.userEvents
-          .filter(_userEvent => _userEvent !== userEvent)
-          .find(_userEvent => _userEvent.accountId === account.id),
+        (account) => !this.userEvents
+          .filter((_userEvent) => _userEvent !== userEvent)
+          .find((_userEvent) => _userEvent.accountId === account.id),
       );
   }
 
@@ -81,7 +81,7 @@ class ConfirmSubscription extends Vue {
   }
 
   get areaLabel() {
-    const area = this.areas.find(_area => _area.id === this.areaId);
+    const area = this.areas.find((_area) => _area.id === this.areaId);
     return area ? area.label : '';
   }
 
@@ -98,7 +98,7 @@ class ConfirmSubscription extends Vue {
    * Current account from saved raid ex
    */
   get currentAccount() {
-    return this.users.find(user => user.id === this.$store.state.user.id);
+    return this.users.find((user) => user.id === this.$store.state.user.id);
   }
 
   get isSubscribed() {
@@ -133,7 +133,7 @@ class ConfirmSubscription extends Vue {
   }
 
   get isValidForm() {
-    return !!this.userEvents.find(userEvent => userEvent.accountId && userEvent.teamId);
+    return !!this.userEvents.find((userEvent) => userEvent.accountId && userEvent.teamId);
   }
 
   get freeUserEvent(): UserEventType {
@@ -248,13 +248,13 @@ class ConfirmSubscription extends Vue {
 
   removeAccount(id: string) {
     // remove from selected
-    let pos = this.accountIds.findIndex(accountId => accountId === id);
+    let pos = this.accountIds.findIndex((accountId) => accountId === id);
     if (pos > -1) {
       this.accountIds.splice(pos, 1);
     }
 
     // remove from the available list
-    pos = this.accountList.findIndex(account => account.id === id);
+    pos = this.accountList.findIndex((account) => account.id === id);
     this.accountList.splice(pos, 1);
 
     this.$store.commit('user/setAccounts', this.accountList);

@@ -53,7 +53,9 @@ class UserCalendar extends Vue {
   }
 
   pushRouteEvent({ event }: { nativeEvent: Event, event: EventType }) {
-    this.$router.push({ name: 'event', params: { id: event.id } });
+    if (event.type !== 'INFO') {
+      this.$router.push({ name: 'event', params: { id: event.id } });
+    }
   }
 
   setToday() {

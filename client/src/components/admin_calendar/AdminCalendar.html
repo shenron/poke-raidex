@@ -25,7 +25,7 @@
           offset-y>
           <template v-slot:activator="{ on }">
             <v-text-field v-model="startEvent"
-              :label="eventType === 1 ? 'Date' : 'Début'"
+              :label="eventType === 'INFO' ? 'Date' : 'Début'"
               readonly
               v-on="on">
               <template v-slot:prepend>
@@ -50,7 +50,7 @@
           </v-date-picker>
         </v-menu>
 
-        <v-text-field v-if="eventType === '1'"
+        <v-text-field v-if="eventType === 'INFO'"
           v-model="hourEvent"
           :rules="hourEventRules"
           label="Heure"
@@ -60,7 +60,7 @@
           </template>
         </v-text-field>
 
-        <v-menu v-if="eventType === '2'"
+        <v-menu v-if="eventType === 'DEFAULT'"
           ref="endEventMenu"
           v-model="endEventMenu"
           :close-on-content-click="false"

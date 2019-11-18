@@ -22,7 +22,7 @@ const router = new Router({
       path: '/event/:id',
       name: 'event',
       component: Event,
-      props: route => ({ id: route.params.id }),
+      props: (route) => ({ id: route.params.id }),
     },
     {
       path: '/settings',
@@ -44,7 +44,7 @@ const router = new Router({
 });
 
 router.beforeEach((to, from, next) => {
-  if (to.matched.some(record => !record.meta.unsecure) && !store.state.user.id) {
+  if (to.matched.some((record) => !record.meta.unsecure) && !store.state.user.id) {
     return router.push({ name: 'login' });
   }
   return next();

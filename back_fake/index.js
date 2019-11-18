@@ -45,22 +45,27 @@ app.post('/api/auth', (req, res) => {
     user: req.body.user,
     id: '1',
     type: req.body.user === 'admin' ? 'ADMIN' : 'OTHER',
-    accounts: [{ id: '2', label: 'Martine' }, { id: '3', label: 'Gilberte' }, { id: '4', label: 'Maurice' }, { id: '5', label: 'Other' }],
+    accounts: [
+      { id: '2', label: 'Martine' },
+      { id: '3', label: 'Gilberte' },
+      { id: '4', label: 'Maurice' },
+      { id: '5', label: 'Other' },
+    ],
   });
 });
 
 const eventTypes = [{
-  id: '1',
+  id: 'INFO',
   label: 'Info',
 }, {
-  id: '2',
+  id: 'DEFAULT',
   label: 'Inscription',
 }];
 
 const events = [
   {
     id: '1',
-    type: '1',
+    type: 'INFO',
     users: [
       {
         id: '10',
@@ -87,7 +92,7 @@ const events = [
   },
   {
     id: '2',
-    type: '2',
+    type: 'DEFAULT',
     users: [],
     teamId: '2',
     start: '2018-12-31',
