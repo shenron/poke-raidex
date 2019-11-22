@@ -1,0 +1,31 @@
+<v-form
+  ref="form"
+  v-model="valid"
+  @submit.prevent="onSubmit"
+>
+  <v-text-field
+    v-model="user"
+    :rules="userRules"
+    label="Nom"
+    required
+  ></v-text-field>
+
+  <v-text-field
+    v-model="password"
+    :rules="passwordRules"
+    label="Mot de passe"
+    type="password"
+    required
+  ></v-text-field>
+
+  <v-btn
+    :disabled="!valid"
+    color="success"
+    class="mr-4"
+    type="submit"
+  >
+    Validate
+  </v-btn>
+
+  <a href="#" @click.stop.prevent="$router.push({ name: 'inscription' })" title="Inscription">Pas encore inscrit?</a>
+</v-form>

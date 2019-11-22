@@ -1,0 +1,48 @@
+<v-form
+  ref="form"
+  v-model="valid"
+  @submit.prevent="onSubmit"
+>
+  <v-text-field
+    v-model="user"
+    :rules="userRules"
+    label="Nom"
+    required
+  ></v-text-field>
+
+  <v-text-field :key="i" v-for="(account, i) in accounts"
+    v-model="accounts[i]"
+    :label="'Petit compte (' + (i + 1) + ')'"
+    @input="onAccountUpdated(i)"
+    @change="onAccountChanged"
+    :rules="accountsRules(i)"
+    required
+  ></v-text-field>
+
+  <v-text-field
+    v-model="password"
+    :rules="passwordRules"
+    label="Mot de passe"
+    type="password"
+    required
+  ></v-text-field>
+
+  <v-text-field
+    v-model="passwordBix"
+    :rules="passwordRulesBis"
+    label="Retaper le mot de passe"
+    type="password"
+    required
+  ></v-text-field>
+
+  <v-btn
+    :disabled="!valid"
+    color="success"
+    class="mr-4"
+    type="submit"
+  >
+    Validate
+  </v-btn>
+
+  <a href="#" @click.stop.prevent="$router.push({ name: 'login' })">J'ai deja un compte</a>
+</v-form>

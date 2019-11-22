@@ -40,6 +40,12 @@ app.use(
 
 app.use(express.static('dist'));
 
+app.post('/api/user', (req, res) => {
+  console.log(req.body);
+
+  res.send('ok');
+});
+
 app.post('/api/auth', (req, res) => {
   res.send({
     user: req.body.user,

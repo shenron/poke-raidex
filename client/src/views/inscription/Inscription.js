@@ -1,12 +1,12 @@
 // @flow
 
 import { Component, Vue } from 'vue-property-decorator';
-import LoginForm from '@/components/login_form/LoginForm.vue';
+import InscriptionForm from '@/components/inscription_form/InscriptionForm.vue';
 
 export default
 @Component({
   components: {
-    LoginForm,
+    InscriptionForm,
   },
 })
 class Login extends Vue {
