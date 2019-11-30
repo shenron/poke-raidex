@@ -48,7 +48,7 @@ export default {
   },
   setSubscription(id: string, users: Array<UserEventType>) {
     return axios.post(`/api/raidex/${id}/subscriptions`, {
-      params: users,
+      users,
     });
   },
 };

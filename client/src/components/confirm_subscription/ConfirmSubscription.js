@@ -19,8 +19,14 @@ const {
 export default
 @Component
 class ConfirmSubscription extends Vue {
-  // toggle the dialog to save
+  // toggle the modal to save the subscription
   savedModal: boolean = false;
+
+  // toggle the dialog to delete an account
+  deleteAccountConfirm: boolean = false;
+
+  // account id to delete when the confirm will be accepted
+  accountIdToDelete: ?string = null;
 
   // model new account, it will be pused in the list of `accountLists`
   freeAccount: string = '';
@@ -141,6 +147,30 @@ class ConfirmSubscription extends Vue {
     }
   }
 
+  /**
+   * this account will be deleted when the `deleteAccountConfirm` accepted
+   */
+  prepareAccountToDelete(id: string) {
+    this.accountIdToDelete = id;
+    this.deleteAccountConfirm = true;
+  }
+
+  deleteAccount() {
+    this.deleteAccountConfirm = false;
+
+    // remove from selected
+    let pos = this.userEvents.findIndex((account) => account.userId === this.accountIdToDelete);
+    if (pos > -1) {
+      this.userEvents.splice(pos, 1);
+    }
+
+    // remove from the available list
+    pos = this.accountList.findIndex((account) => account.id === this.accountIdToDelete);
+    this.accountList.splice(pos, 1);
+
+    this.$store.commit('user/setAccounts', this.accountList);
+  }
+
   getDistinctAccounts(userEvent: UserEventType): Array<IdLabelType> {
     // from `accountList` substract already used team from `userEvents`
     // ignore current userEvent
@@ -203,7 +233,7 @@ class ConfirmSubscription extends Vue {
   }
 
   async editSubscription(openPopup: Function, e: Event) {
-    await setSubscription(this.id, this.userEvents);
+    await setSubscription(this.id, this.userEvents.filter((userEvent) => userEvent.userId));
     this.hasBeenChanged = false;
 
     // clone to remove binding
@@ -226,20 +256,6 @@ class ConfirmSubscription extends Vue {
     this.$store.commit('user/setAccounts', this.accountList);
 
     return Promise.resolve(newUser);
-  }
-
-  removeAccount(id: string) {
-    // remove from selected
-    let pos = this.accountIds.findIndex((accountId) => accountId === id);
-    if (pos > -1) {
-      this.accountIds.splice(pos, 1);
-    }
-
-    // remove from the available list
-    pos = this.accountList.findIndex((account) => account.id === id);
-    this.accountList.splice(pos, 1);
-
-    this.$store.commit('user/setAccounts', this.accountList);
   }
 
   @Prop({ type: String, required: true })

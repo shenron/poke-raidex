@@ -4,6 +4,39 @@
   {{ areaLabel }}
   </p>
 
+  <v-dialog
+    v-model="deleteAccountConfirm"
+    max-width="290"
+    >
+    <v-card>
+      <v-card-title class="headline">Suppression</v-card-title>
+
+      <v-card-text>
+        Le Petit Compte va etre supprimé
+      </v-card-text>
+
+      <v-card-actions>
+        <v-spacer></v-spacer>
+
+        <v-btn
+          color="green darken-1"
+          text
+          @click="deleteAccountConfirm = false"
+          >
+          Non
+        </v-btn>
+
+          <v-btn
+            color="green darken-1"
+            text
+            @click="deleteAccount"
+            >
+            Oui
+          </v-btn>
+      </v-card-actions>
+    </v-card>
+  </v-dialog>
+
   <v-row v-for="(userEvent, i) in userEvents"
          :key="userEvent.userId"
          class="text--primary">
@@ -16,8 +49,9 @@
           <v-icon>mdi-minus</v-icon>
         </v-btn>
 
-        <v-btn x-small
-               fab>
+        <v-btn v-if="userEvent.userId !== userStore.id" x-small
+               fab
+               @click="prepareAccountToDelete(userEvent.userId)">
           <v-icon>mdi-delete</v-icon>
         </v-btn>
       </v-col>

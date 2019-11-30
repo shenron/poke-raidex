@@ -179,7 +179,7 @@ app.get('/api/raidex/:id', (req, res) => {
 });
 
 app.post('/api/raidex/:id/subscriptions', (req, res) => {
-  const users = req.body.params;
+  const { users } = req.body;
   console.log(users);
   res.send('saved');
 });
