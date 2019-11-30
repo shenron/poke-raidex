@@ -178,6 +178,12 @@ app.get('/api/raidex/:id', (req, res) => {
   res.send(events.find(event => event.id === req.params.id));
 });
 
+app.post('/api/raidex/:id/subscriptions', (req, res) => {
+  const users = req.body.params;
+  console.log(users);
+  res.send('saved');
+});
+
 app.get('/api/browses/areas', (req, res) => {
   res.send(areas);
 });

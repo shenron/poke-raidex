@@ -3,24 +3,22 @@
 import {
   Component, Prop, Vue, Watch,
 } from 'vue-property-decorator';
-import api, { type RaidExUserType } from '@/api/raidex';
+import api, {
+  type RaidExUserType,
+  type UserEventType,
+} from '@/api/raidex';
 import monthNames from '@/_base/monthNames';
 import type { UserStateType } from '@/store/modules/user';
 import type { IdLabelType } from '@/definitions/IdLabel.d';
 
-type UserEventType = {|
-  userId: string,
-  teamId: string,
-|};
-
-const { getRaidEx } = api;
+const {
+  getRaidEx,
+  setSubscription,
+} = api;
 
 export default
 @Component
 class ConfirmSubscription extends Vue {
-  // toggle the dialog to unsubscribe
-  leaveDialog: boolean = false;
-
   // toggle the dialog to save
   savedModal: boolean = false;
 
@@ -38,6 +36,9 @@ class ConfirmSubscription extends Vue {
 
   userEvents: Array<UserEventType> = [];
 
+  // keep the initial value of `userEvents` to know if there is a change
+  initialUserEvents: Array<UserEventType> = [];
+
   // saved raid ex - start
   start: ?string = null;
 
@@ -47,11 +48,14 @@ class ConfirmSubscription extends Vue {
   // saved raid ex - area id
   areaId: ?string = null;
 
+  // user changes something, need to save
+  hasBeenChanged: boolean = true;
+
   /**
    * Accounts subscribed to the event
    */
   get myAccounts() {
-    const myId = this.$store.state.user.id;
+    const myId = this.userStore.id;
 
     const me = this.users
       .find((user) => user.id === myId);
@@ -61,26 +65,6 @@ class ConfirmSubscription extends Vue {
     }
 
     return [];
-  }
-
-  getDistinctAccounts(userEvent: UserEventType): Array<IdLabelType> {
-    // from `accountList` substract already used team from `userEvents`
-    // ignore current userEvent
-    return this.accountList
-      .filter(
-        (account) => !this.userEvents
-          .filter((_userEvent) => _userEvent !== userEvent)
-          .find((_userEvent) => _userEvent.userId === account.id),
-      );
-  }
-
-  removeUserEvent(i: number) {
-    if (this.userEvents.length === 1) {
-      this.userEvents[0].userId = '';
-      this.userEvents[0].teamId = '';
-    } else {
-      this.userEvents.splice(i, 1);
-    }
   }
 
   get areas() {
@@ -94,11 +78,6 @@ class ConfirmSubscription extends Vue {
   get areaLabel() {
     const area = this.areas.find((_area) => _area.id === this.areaId);
     return area ? area.label : '';
-  }
-
-  // user changes something, need to save
-  get hasBeenChanged() {
-    return true;
   }
 
   get userStore() {
@@ -152,8 +131,33 @@ class ConfirmSubscription extends Vue {
       teamId: user.teamId,
     }));
 
+    // clone to remove binding
+    this.initialUserEvents = [...this.userEvents.map((user) => ({
+      ...user,
+    }))];
+
     if (!this.userEvents.length) {
       this.userEvents.push({ userId: this.userStore.id, teamId: '' });
+    }
+  }
+
+  getDistinctAccounts(userEvent: UserEventType): Array<IdLabelType> {
+    // from `accountList` substract already used team from `userEvents`
+    // ignore current userEvent
+    return this.accountList
+      .filter(
+        (account) => !this.userEvents
+          .filter((_userEvent) => _userEvent !== userEvent)
+          .find((_userEvent) => _userEvent.userId === account.id),
+      );
+  }
+
+  removeUserEvent(i: number) {
+    if (this.userEvents.length === 1) {
+      this.userEvents[0].userId = '';
+      this.userEvents[0].teamId = '';
+    } else {
+      this.userEvents.splice(i, 1);
     }
   }
 
@@ -177,6 +181,9 @@ class ConfirmSubscription extends Vue {
       return;
     }
 
+    this.hasBeenChanged = JSON.stringify(userEvents.filter((event) => event.userId))
+      !== JSON.stringify(this.initialUserEvents);
+
     const lastUserEvent = userEvents[userEvents.length - 1];
     if (lastUserEvent.userId && lastUserEvent.teamId) {
       userEvents.push({ userId: '', teamId: '' });
@@ -195,44 +202,15 @@ class ConfirmSubscription extends Vue {
     }
   }
 
-  editSubscription() {
-    this.savedModal = false;
+  async editSubscription(openPopup: Function, e: Event) {
+    await setSubscription(this.id, this.userEvents);
+    this.hasBeenChanged = false;
 
-    // update
-    // if (this.isSubscribed) {
-    //   const { currentAccount } = this;
-    //   const pos = this.users.indexOf(currentAccount);
-
-    //   if (currentAccount && pos > -1) {
-    //     this.users.splice(pos, 1, {
-    //       id: currentAccount.id,
-    //       user: currentAccount.user,
-    //       subscriptions: this.userIds,
-    //       teamId: String(this.teamId),
-    //     });
-    //   }
-    // } else {
-    //   // create
-    //   this.users.push({
-    //     id: this.$store.state.user.id,
-    //     user: this.$store.state.user.user,
-    //     subscriptions: this.accountIds,
-    //     teamId: String(this.teamId),
-    //   });
-    // }
-  }
-
-  unsubscribe() {
-    this.leaveDialog = false;
-
-    this.teamId = null;
-
-    const { currentAccount } = this;
-    const pos = this.users.indexOf(currentAccount);
-
-    if (pos > -1) {
-      this.users.splice(pos, 1);
-    }
+    // clone to remove binding
+    this.initialUserEvents = [...this.userEvents.map((user) => ({
+      ...user,
+    }))];
+    openPopup(e);
   }
 
   async createSubAccount(newAccountLabel: string) {

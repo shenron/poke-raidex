@@ -4,10 +4,20 @@ import axios from 'axios';
 
 export type IdLabelType = {| id: string, label: string |};
 
+export type UserEventType = {|
+  userId: string,
+  teamId: string,
+|};
+
 export type RaidExUserType = {|
   id: string,
   user: string,
-  subscriptions: Array<{| teamId: string, userId: string, userName: string, teamName: string |}>,
+  // display name of user and team
+  subscriptions: Array<{|
+    ...UserEventType,
+    userName: string,
+    teamName: string,
+  |}>,
   teamId: Array<string>,
 |};
 
@@ -35,5 +45,10 @@ export default {
   },
   getBrowseRaidExTypes(): Promise<{| data: Array<IdLabelType> |}> {
     return axios.get('/api/browses/raidex-types');
+  },
+  setSubscription(id: string, users: Array<UserEventType>) {
+    return axios.post(`/api/raidex/${id}/subscriptions`, {
+      params: users,
+    });
   },
 };

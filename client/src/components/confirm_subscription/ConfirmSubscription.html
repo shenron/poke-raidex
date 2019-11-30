@@ -13,12 +13,12 @@
              x-small
              class="mr-2"
              fab>
-          <v-icon dark>mdi-minus</v-icon>
+          <v-icon>mdi-minus</v-icon>
         </v-btn>
 
         <v-btn x-small
                fab>
-          <v-icon dark>mdi-delete</v-icon>
+          <v-icon>mdi-delete</v-icon>
         </v-btn>
       </v-col>
 
@@ -63,18 +63,16 @@
 
   <v-row>
     <v-col class="mb-12">
-      <v-dialog v-if="hasBeenChanged"
-                key="dialog-edit"
+      <v-dialog key="dialog-edit"
                 v-model="savedModal"
                 persistent
                 max-width="290">
         <template v-slot:activator="{ on }">
           <v-btn class="ma-2"
-                 v-on="on"
+                 @click="editSubscription(on.click)"
                  :color="hasBeenChanged ? 'orange' : 'green'"
-                 :dark="isValidForm"
-                 :disabled="!isValidForm">
-            <v-icon dark>mdi-checkbox-marked-circle</v-icon>
+                 :disabled="!isValidForm || !hasBeenChanged">
+            <v-icon color="white">mdi-checkbox-marked-circle</v-icon>
           </v-btn>
         </template>
         <v-card>
@@ -83,7 +81,7 @@
             <div class="flex-grow-1"></div>
             <v-btn color="green darken-1"
                    text
-                   @click="editSubscription">OK</v-btn>
+                   @click="savedModal = false">OK</v-btn>
           </v-card-actions>
         </v-card>
       </v-dialog>
