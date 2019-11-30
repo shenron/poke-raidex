@@ -5,7 +5,8 @@
   "license": "MIT",
   "scripts": {
     "serve": "nodemon --watch index.js index.js",
-    "lint": "eslint .",
+    "lint": "eslint index.js",
+    "lint:fix": "eslint index.js --fix",
     "precommit": "npm run lint"
   },
   "dependencies": {

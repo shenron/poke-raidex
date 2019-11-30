@@ -147,7 +147,10 @@ class ConfirmSubscription extends Vue {
     this.end = data.end;
     this.areaId = data.areaId;
 
-    this.userEvents = this.myAccounts;
+    this.userEvents = this.myAccounts.map((user) => ({
+      userId: user.userId,
+      teamId: user.teamId,
+    }));
 
     if (!this.userEvents.length) {
       this.userEvents.push({ userId: this.userStore.id, teamId: '' });

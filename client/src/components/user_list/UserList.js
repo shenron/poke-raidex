@@ -15,24 +15,31 @@ class UserList extends Vue {
       text: 'Joueur',
       align: 'left',
       sortable: false,
-      value: 'name',
+      value: 'userName',
+    }, {
+      text: 'Equipe',
+      align: 'left',
+      sortable: true,
+      value: 'teamName',
     }];
   }
 
   get players() {
-    return [{
-      id: 1,
-      name: 'Toto',
+    // $FlowFixMe
+    return this.users.reduce((acc, v) => {
+      acc.subscriptions = [...acc.subscriptions, ...v.subscriptions];
+      return acc;
     }, {
-      id: 2,
-      name: 'TATA',
-    }];
+      subscriptions: [],
+    }).subscriptions;
   }
 
   async created() {
     const { data } = await getRaidEx(this.id);
 
     this.users = data.users;
+
+    console.log(this.players);
   }
 
   @Prop({ type: String, required: true })

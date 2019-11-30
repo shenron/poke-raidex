@@ -7,7 +7,7 @@ export type IdLabelType = {| id: string, label: string |};
 export type RaidExUserType = {|
   id: string,
   user: string,
-  subscriptions: Array<{| teamId: string, userId: string |}>,
+  subscriptions: Array<{| teamId: string, userId: string, userName: string, teamName: string |}>,
   teamId: Array<string>,
 |};
 

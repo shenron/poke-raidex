@@ -15,6 +15,115 @@ const app = express();
 
 const server = http.createServer(app);
 
+// Static values
+const accounts = [
+  { id: '1', label: 'Admin' },
+  { id: '2', label: 'Test' },
+  { id: '3', label: 'Martine' },
+  { id: '4', label: 'Gilberte' },
+  { id: '5', label: 'Maurice' },
+  { id: '6', label: 'Other' },
+];
+
+const teams = [
+  { id: '1', label: 'Bravoure', color: 'red' },
+  { id: '2', label: 'Sagesse', color: 'blue' },
+  { id: '3', label: 'Instinct', color: 'yellow' },
+];
+
+const eventTypes = [{
+  id: 'INFO',
+  label: 'Info',
+}, {
+  id: 'DEFAULT',
+  label: 'Inscription',
+}];
+
+const events = [
+  {
+    id: '1',
+    type: 'DEFAULT',
+    users: [
+      {
+        id: '1',
+        user: 'admin',
+        subscriptions: [
+          {
+            userId: '1',
+            userName: accounts.find((u) => u.id === '1').label,
+            teamId: '1',
+            teamName: teams.find((t) => t.id === '1').label,
+          },
+          {
+            userId: '3',
+            userName: accounts.find((u) => u.id === '3').label,
+            teamId: '2',
+            teamName: teams.find((t) => t.id === '2').label,
+          },
+          {
+            userId: '4',
+            userName: accounts.find((u) => u.id === '4').label,
+            teamId: '1',
+            teamName: teams.find((t) => t.id === '1').label,
+          },
+          {
+            userId: '5',
+            userName: accounts.find((u) => u.id === '5').label,
+            teamId: '2',
+            teamName: teams.find((t) => t.id === '2').label,
+          },
+        ],
+      },
+      {
+        id: '2',
+        user: 'test',
+        subscriptions: [
+          {
+            userId: '2',
+            userName: accounts.find((u) => u.id === '2').label,
+            teamId: '1',
+            teamName: teams.find((t) => t.id === '1').label,
+          },
+          {
+            userId: '5',
+            userName: accounts.find((u) => u.id === '5').label,
+            teamId: '1',
+            teamName: teams.find((t) => t.id === '1').label,
+          },
+        ],
+      },
+    ],
+    start: '2018-12-29',
+    end: '2019-01-01',
+    areaId: '1',
+  },
+  {
+    id: '2',
+    type: 'INFO',
+    users: [],
+    start: '2018-12-31',
+    end: '2019-01-04',
+    areaId: '2',
+  },
+  {
+    id: '3',
+    type: 'DEFAULT',
+    users: [
+      {
+        id: '1',
+        user: 'ADMIN',
+        accountIds: ['2', '5'],
+        teamId: '3',
+      },
+    ],
+    start: '2019-02-10',
+    end: '2019-02-17',
+    areaId: '3',
+  },
+];
+
+const areas = [{ id: '1', label: 'Chaudron' }, { id: '2', label: 'Princesse Pauline' }, { id: '3', label: 'Mougins' }];
+
 // trust first proxy
 app.set('trust proxy', 1);
 
@@ -57,83 +166,9 @@ app.post('/api/auth', (req, res) => {
     user: req.body.user,
     id,
     type: req.body.user === 'admin' ? 'ADMIN' : 'OTHER',
-    accounts: [
-      { id: '2', label: 'Martine' },
-      { id: '3', label: 'Gilberte' },
-      { id: '4', label: 'Maurice' },
-      { id: '5', label: 'Other' },
-    ],
+    accounts: accounts.slice(2),
   });
 });
-
-const eventTypes = [{
-  id: 'INFO',
-  label: 'Info',
-}, {
-  id: 'DEFAULT',
-  label: 'Inscription',
-}];
-
-const events = [
-  {
-    id: '1',
-    type: 'DEFAULT',
-    users: [
-      {
-        id: '1',
-        user: 'Admin',
-        subscriptions: [
-          { userId: '1', teamId: '1' },
-          { userId: '2', teamId: '1' },
-          { userId: '3', teamId: '1' },
-          { userId: '4', teamId: '1' },
-        ],
-      },
-      {
-        id: '2',
-        user: 'Test',
-        subscriptions: [
-          { userId: '20', teamId: '1' },
-          { userId: '5', teamId: '1' },
-        ],
-      },
-    ],
-    start: '2018-12-29',
-    end: '2019-01-01',
-    areaId: '1',
-  },
-  {
-    id: '2',
-    type: 'INFO',
-    users: [],
-    start: '2018-12-31',
-    end: '2019-01-04',
-    areaId: '2',
-  },
-  {
-    id: '3',
-    type: 'DEFAULT',
-    users: [
-      {
-        id: '1',
-        user: 'ADMIN',
-        accountIds: ['2', '5'],
-        teamId: '3',
-      },
-    ],
-    start: '2019-02-10',
-    end: '2019-02-17',
-    areaId: '3',
-  },
-];
-
-const areas = [{ id: '1', label: 'Chaudron' }, { id: '2', label: 'Princesse Pauline' }, { id: '3', label: 'Mougins' }];
-
-const teams = [
-  { id: '1', label: 'Bravoure', color: 'red' },
-  { id: '2', label: 'Sagesse', color: 'blue' },
-  { id: '3', label: 'Instinct', color: 'yellow' },
-];
 
 app.get('/api/raidex', (req, res) => {
   res.send(events);
