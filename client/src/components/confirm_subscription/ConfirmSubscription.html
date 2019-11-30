@@ -1,28 +1,11 @@
 <div class="mx-auto">
-  <v-btn icon
-         v-if="isSubscribed"
-         :color="hasBeenChanged ? 'orange' : 'green'"
-         dark>
-    <v-icon dark>mdi-checkbox-marked-circle</v-icon>
-  </v-btn>
-
-  <v-tooltip right>
-    <template v-slot:activator="{ on }">
-      <v-badge>
-        <span v-text="dateStr"></span>
-        <template v-slot:badge>
-          <span v-on="on"
-                v-text="usersLength"></span>
-        </template>
-      </v-badge>
-    </template>
-    <span>{{ usersLength }} Participants</span>
-  </v-tooltip>
-
-  <p v-text="areaLabel"></p>
+  <p>
+  {{ dateStr }}</br>
+  {{ areaLabel }}
+  </p>
 
   <v-row v-for="(userEvent, i) in userEvents"
-         :key="userEvent.accountId"
+         :key="userEvent.userId"
          class="text--primary">
     <template v-if="getDistinctAccounts(userEvent).length">
       <v-col class="col-md-3 pt-6">
@@ -40,7 +23,7 @@
       </v-col>
 
       <v-col md="5">
-        <v-select v-model="userEvent.accountId"
+        <v-select v-model="userEvent.userId"
                   :items="getDistinctAccounts(userEvent)"
                   item-value="id"
                   item-text="label"
@@ -78,54 +61,32 @@
     </v-col>
   </v-row>
 
-  <v-dialog v-if="!isSubscribed || hasBeenChanged"
-            key="dialog-edit"
-            v-model="savedModal"
-            persistent
-            max-width="290">
-    <template v-slot:activator="{ on }">
-      <v-btn class="ma-2"
-             v-on="on"
-             :color="hasBeenChanged ? 'orange' : 'green'"
-             :dark="isValidForm"
-             :disabled="!isValidForm">
-        <v-icon dark>mdi-checkbox-marked-circle</v-icon>
-      </v-btn>
-    </template>
-    <v-card>
-      <v-card-title class="headline">C'est dans la boite!</v-card-title>
-      <v-card-actions>
-        <div class="flex-grow-1"></div>
-        <v-btn color="green darken-1"
-               text
-               @click="editSubscription">OK</v-btn>
-      </v-card-actions>
-    </v-card>
-  </v-dialog>
-
-  <v-dialog v-else-if="isSubscribed"
-            v-model="leaveDialog"
-            persistent
-            max-width="290"
-            key="dialog-unsubscribe">
-    <template v-slot:activator="{ on }">
-      <v-btn class="ma-2"
-             v-on="on">
-        <v-icon dark>mdi-exit-to-app</v-icon>
-      </v-btn>
-    </template>
-    <v-card>
-      <v-card-title class="headline">Quitter le Raid ex?</v-card-title>
-      <v-card-text>Vous pouvez à tout moment le rejoindre ;)</v-card-text>
-      <v-card-actions>
-        <div class="flex-grow-1"></div>
-        <v-btn color="green darken-1"
-               text
-               @click="unsubscribe">Oui</v-btn>
-        <v-btn color="green darken-1"
-               text
-               @click="leaveDialog = false">Non</v-btn>
-      </v-card-actions>
-    </v-card>
-  </v-dialog>
+  <v-row>
+    <v-col class="mb-12">
+      <v-dialog v-if="hasBeenChanged"
+                key="dialog-edit"
+                v-model="savedModal"
+                persistent
+                max-width="290">
+        <template v-slot:activator="{ on }">
+          <v-btn class="ma-2"
+                 v-on="on"
+                 :color="hasBeenChanged ? 'orange' : 'green'"
+                 :dark="isValidForm"
+                 :disabled="!isValidForm">
+            <v-icon dark>mdi-checkbox-marked-circle</v-icon>
+          </v-btn>
+        </template>
+        <v-card>
+          <v-card-title class="headline">C'est dans la boite!</v-card-title>
+          <v-card-actions>
+            <div class="flex-grow-1"></div>
+            <v-btn color="green darken-1"
+                   text
+                   @click="editSubscription">OK</v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
+    </v-col>
+  </v-row>
 </div>

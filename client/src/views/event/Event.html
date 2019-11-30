@@ -1,11 +1,10 @@
 <v-container>
-
   <v-layout justify-center>
     <v-flex xs12
       md4>
       <ConfirmSubscription v-if="activeBtn === 'SUBSCRIPTION'" :id="id" />
 
-      <UserList v-else-if="activeBtn === 'LIST'"/>
+      <UserList v-else-if="activeBtn === 'LIST'" :id="id"/>
     </v-flex>
   </v-layout>
 

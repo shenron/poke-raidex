@@ -1,4 +1,6 @@
-FROM node:10.16-alpine
+FROM node:12.13-alpine
+
+ENV NODE_ENV=production
 
 RUN mkdir -p /usr/src/app
 

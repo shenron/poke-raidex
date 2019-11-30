@@ -148,9 +148,8 @@ class AdminCalendar extends Vue {
     }
 
     // before, save the event in BD
-
     this.events.push({
-      id: -1,
+      id: '',
       name,
       start: this.startEvent,
       end: this.endEvent,

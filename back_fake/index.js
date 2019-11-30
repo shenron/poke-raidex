@@ -7,9 +7,12 @@ const history = require('connect-history-api-fallback');
 const session = require('express-session');
 const bodyParser = require('body-parser');
 
+const root = `${__dirname}/dist`;
+
 const http = require('http');
 
 const app = express();
+
 const server = http.createServer(app);
 
 // trust first proxy
@@ -29,16 +32,12 @@ const newSession = session({
 });
 app.use(newSession);
 
-app.use(history());
-
 app.use(
   bodyParser.urlencoded({
     extended: true,
   }),
   bodyParser.json(),
 );
-
-app.use(express.static('dist'));
 
 app.post('/api/user', (req, res) => {
   console.log(req.body);
@@ -47,9 +46,16 @@ app.post('/api/user', (req, res) => {
 });
 
 app.post('/api/auth', (req, res) => {
+  let id = '100';
+  if (req.body.user === 'admin') {
+    id = '1';
+  } else if (req.body.user === 'test') {
+    id = '2';
+  }
+
   res.send({
     user: req.body.user,
-    id: '1',
+    id,
     type: req.body.user === 'admin' ? 'ADMIN' : 'OTHER',
     accounts: [
       { id: '2', label: 'Martine' },
@@ -71,24 +77,24 @@ const eventTypes = [{
 const events = [
   {
     id: '1',
-    type: 'INFO',
+    type: 'DEFAULT',
     users: [
       {
-        id: '10',
-        user: 'Toto',
+        id: '1',
+        user: 'Admin',
         subscriptions: [
-          { userId: '10', teamId: 1 },
-          { userId: '2', teamId: 1 },
-          { userId: '3', teamId: 1 },
-          { userId: '4', teamId: 1 },
+          { userId: '1', teamId: '1' },
+          { userId: '2', teamId: '1' },
+          { userId: '3', teamId: '1' },
+          { userId: '4', teamId: '1' },
         ],
       },
       {
-        id: '20',
-        user: 'Tata',
+        id: '2',
+        user: 'Test',
         subscriptions: [
-          { userId: '20', teamId: 1 },
-          { userId: '5', teamId: 1 },
+          { userId: '20', teamId: '1' },
+          { userId: '5', teamId: '1' },
         ],
       },
     ],
@@ -98,15 +104,15 @@ const events = [
   },
   {
     id: '2',
-    type: 'DEFAULT',
+    type: 'INFO',
     users: [],
-    teamId: '2',
     start: '2018-12-31',
     end: '2019-01-04',
     areaId: '2',
   },
   {
     id: '3',
+    type: 'DEFAULT',
     users: [
       {
         id: '1',
@@ -152,5 +158,14 @@ app.get('/api/browses/teams', (req, res) => {
 app.delete('/api/auth', (req, res) => {
   res.send('ok');
 });
+
+
+if (process.env.NODE_ENV === 'production') {
+  // configure static with HTML5 history
+  const staticFileMiddleware = express.static(root);
+  app.use(staticFileMiddleware);
+  app.use(history());
+  app.use(staticFileMiddleware);
+}
 
 server.listen(port, () => console.log(`Poke RaidEx mock running on port ${port}`));

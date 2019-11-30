@@ -3,13 +3,13 @@
 import {
   Component, Prop, Vue, Watch,
 } from 'vue-property-decorator';
-import api from '@/api/raidex';
+import api, { type RaidExUserType } from '@/api/raidex';
 import monthNames from '@/_base/monthNames';
 import type { UserStateType } from '@/store/modules/user';
 import type { IdLabelType } from '@/definitions/IdLabel.d';
 
 type UserEventType = {|
-  accountId: string,
+  userId: string,
   teamId: string,
 |};
 
@@ -34,12 +34,7 @@ class ConfirmSubscription extends Vue {
   accountList: Array<IdLabelType> = [];
 
   // saved raid ex - users
-  users: Array<{
-    id: string,
-    user: string,
-    subscriptions: Array<{| userId: string, teamId: string |}>,
-    teamId: string,
-  }> = [];
+  users: Array<RaidExUserType> = [];
 
   userEvents: Array<UserEventType> = [];
 
@@ -52,6 +47,22 @@ class ConfirmSubscription extends Vue {
   // saved raid ex - area id
   areaId: ?string = null;
 
+  /**
+   * Accounts subscribed to the event
+   */
+  get myAccounts() {
+    const myId = this.$store.state.user.id;
+
+    const me = this.users
+      .find((user) => user.id === myId);
+
+    if (me) {
+      return me.subscriptions;
+    }
+
+    return [];
+  }
+
   getDistinctAccounts(userEvent: UserEventType): Array<IdLabelType> {
     // from `accountList` substract already used team from `userEvents`
     // ignore current userEvent
@@ -59,13 +70,13 @@ class ConfirmSubscription extends Vue {
       .filter(
         (account) => !this.userEvents
           .filter((_userEvent) => _userEvent !== userEvent)
-          .find((_userEvent) => _userEvent.accountId === account.id),
+          .find((_userEvent) => _userEvent.userId === account.id),
       );
   }
 
   removeUserEvent(i: number) {
     if (this.userEvents.length === 1) {
-      this.userEvents[0].accountId = '';
+      this.userEvents[0].userId = '';
       this.userEvents[0].teamId = '';
     } else {
       this.userEvents.splice(i, 1);
@@ -94,17 +105,6 @@ class ConfirmSubscription extends Vue {
     return this.$store.state.user;
   }
 
-  /**
-   * Current account from saved raid ex
-   */
-  get currentAccount() {
-    return this.users.find((user) => user.id === this.$store.state.user.id);
-  }
-
-  get isSubscribed() {
-    return !!this.currentAccount;
-  }
-
   get dateStr() {
     if (!this.start || !this.end) {
       return '';
@@ -113,7 +113,7 @@ class ConfirmSubscription extends Vue {
     let str = 'Du ';
 
     const dateStart = new Date(this.start);
-    str += ` ${dateStart.getDate()}`;
+    str += ` ${dateStart.getDate()} `;
 
     if (this.end) {
       const dateEnd = new Date(this.end);
@@ -128,17 +128,13 @@ class ConfirmSubscription extends Vue {
     return str;
   }
 
-  get usersLength() {
-    return this.users.reduce((a, b) => a + b.subscriptions.length, 0);
-  }
-
   get isValidForm() {
-    return !!this.userEvents.find((userEvent) => userEvent.accountId && userEvent.teamId);
+    return !!this.userEvents.find((userEvent) => userEvent.userId && userEvent.teamId);
   }
 
   get freeUserEvent(): UserEventType {
     return {
-      accountId: this.freeAccount,
+      userId: this.freeAccount,
       teamId: this.freeAccountTeamId,
     };
   }
@@ -150,15 +146,20 @@ class ConfirmSubscription extends Vue {
     this.start = data.start;
     this.end = data.end;
     this.areaId = data.areaId;
-    this.userEvents.push({ accountId: this.userStore.id, teamId: '' });
+
+    this.userEvents = this.myAccounts;
+
+    if (!this.userEvents.length) {
+      this.userEvents.push({ userId: this.userStore.id, teamId: '' });
+    }
   }
 
   @Watch('freeUserEvent')
   async onWatchNewAccountChanged(freeAccount: UserEventType) {
-    if (freeAccount.accountId && freeAccount.teamId) {
-      const newAccount = await this.createSubAccount(freeAccount.accountId);
+    if (freeAccount.userId && freeAccount.teamId) {
+      const newAccount = await this.createSubAccount(freeAccount.userId);
       this.userEvents.splice(this.userEvents.length - 1, 1, {
-        accountId: newAccount.id,
+        userId: newAccount.id,
         teamId: freeAccount.teamId,
       });
 
@@ -174,8 +175,8 @@ class ConfirmSubscription extends Vue {
     }
 
     const lastUserEvent = userEvents[userEvents.length - 1];
-    if (lastUserEvent.accountId && lastUserEvent.teamId) {
-      userEvents.push({ accountId: '', teamId: '' });
+    if (lastUserEvent.userId && lastUserEvent.teamId) {
+      userEvents.push({ userId: '', teamId: '' });
     }
   }
 
@@ -203,7 +204,7 @@ class ConfirmSubscription extends Vue {
     //     this.users.splice(pos, 1, {
     //       id: currentAccount.id,
     //       user: currentAccount.user,
-    //       subscriptions: this.accountIds,
+    //       subscriptions: this.userIds,
     //       teamId: String(this.teamId),
     //     });
     //   }
@@ -234,7 +235,7 @@ class ConfirmSubscription extends Vue {
   async createSubAccount(newAccountLabel: string) {
     // fake id,
     const id = String(Math.floor(Math.random() * (100 - 20 + 1) + 20));
-    const newAccount = {
+    const newUser = {
       id,
       label: newAccountLabel,
     };
@@ -243,7 +244,7 @@ class ConfirmSubscription extends Vue {
 
     this.$store.commit('user/setAccounts', this.accountList);
 
-    return Promise.resolve(newAccount);
+    return Promise.resolve(newUser);
   }
 
   removeAccount(id: string) {

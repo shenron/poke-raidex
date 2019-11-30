@@ -1,36 +1,39 @@
-// flow
+// @flow
 
 import axios from 'axios';
 
 export type IdLabelType = {| id: string, label: string |};
 
+export type RaidExUserType = {|
+  id: string,
+  user: string,
+  subscriptions: Array<{| teamId: string, userId: string |}>,
+  teamId: Array<string>,
+|};
+
 export type RaidExType = {|
   id: string,
-  users: Array<{
-    id: string,
-    user: string,
-    accountIds: Array<string>,
-    teamId: Array<string>,
-  }>,
+  type: 'INFO' | 'DEFAULT',
+  users: Array<RaidExUserType>,
   areaId: string,
   start: string,
   end: string,
 |};
 
 export default {
-  getRaidExList(): Promise<Array<RaidExType>> {
+  getRaidExList(): Promise<{| data: Array<RaidExType> |}> {
     return axios.get('/api/raidex');
   },
-  getRaidEx(id: string): Promise<RaidExType> {
+  getRaidEx(id: string): Promise<{| data: RaidExType |}> {
     return axios.get(`/api/raidex/${id}`);
   },
-  getBrowseTeams(): Promise<Array<IdLabelType>> {
+  getBrowseTeams(): Promise<{| data: Array<IdLabelType> |}> {
     return axios.get('/api/browses/teams');
   },
-  getBrowseAreas(): Promise<Array<IdLabelType>> {
+  getBrowseAreas(): Promise<{| data: Array<IdLabelType> |}> {
     return axios.get('/api/browses/areas');
   },
-  getBrowseRaidExTypes(): Promise<Array<IdLabelType>> {
+  getBrowseRaidExTypes(): Promise<{| data: Array<IdLabelType> |}> {
     return axios.get('/api/browses/raidex-types');
   },
 };
