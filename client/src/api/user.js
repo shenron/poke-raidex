@@ -12,7 +12,7 @@ export default {
   logOff() {
     return axios.delete('/api/auth');
   },
-  inscription(account: Object) {
+  registration(account: Object) {
     return axios.post('/api/user', account);
   },
 };

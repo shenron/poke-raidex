@@ -1,13 +1,10 @@
 // @flow
 
 import { Component, Vue } from 'vue-property-decorator';
-import apiUser from '@/api/user';
-
-const { inscription } = apiUser;
 
 export default
 @Component
-class InscriptionForm extends Vue {
+class RegistrationForm extends Vue {
   valid: boolean = true;
 
   user: ?string = null;
@@ -65,12 +62,10 @@ class InscriptionForm extends Vue {
   async onSubmit() {
     const { user, password, accounts } = this;
 
-    const res = await inscription({
-      user,
-      password,
-      accounts,
-    });
+    const { id } = await this.$store.dispatch('user/login', { user, password, accounts });
 
-    console.log(res);
+    if (id) {
+      this.$emit('logged');
+    }
   }
 }

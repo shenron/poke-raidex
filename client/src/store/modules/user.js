@@ -38,6 +38,12 @@ const actions: {
     await api.logOff();
     return commit('logOff');
   },
+  async registration({ commit }, account: {| user: string, password: string, accounts: Array<string> |}) {
+    const user = await api.registration(account);
+    commit('setUser', user);
+
+    return user;
+  },
 };
 
 // mutations

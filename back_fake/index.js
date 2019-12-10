@@ -148,13 +148,7 @@ app.use(
   bodyParser.json(),
 );
 
-app.post('/api/user', (req, res) => {
-  console.log(req.body);
-
-  res.send('ok');
-});
-
-app.post('/api/auth', (req, res) => {
+const login = (req, res) => {
   let id = '100';
   if (req.body.user === 'admin') {
     id = '1';
@@ -168,7 +162,11 @@ app.post('/api/auth', (req, res) => {
     type: req.body.user === 'admin' ? 'ADMIN' : 'OTHER',
     accounts: accounts.slice(2),
   });
-});
+};
+
+app.post('/api/user', login);
+
+app.post('/api/auth', login);
 
 app.get('/api/raidex', (req, res) => {
   res.send(events);
