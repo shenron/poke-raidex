@@ -37,6 +37,11 @@ export default {
   getRaidEx(id: string): Promise<{| data: RaidExType |}> {
     return axios.get(`/api/raidex/${id}`);
   },
+  updateRaidEx(raidEx: RaidExType) {
+    return axios.put(`/api/raidex/${raidEx.id}`, {
+      raidEx,
+    });
+  },
   getBrowseTeams(): Promise<{| data: Array<IdLabelType> |}> {
     return axios.get('/api/browses/teams');
   },

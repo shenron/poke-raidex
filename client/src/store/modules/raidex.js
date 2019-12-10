@@ -40,6 +40,10 @@ const actions: {
     const { data } = await api.getRaidExList();
     commit('setEvents', data);
   },
+  async updateEvent({ commit }, event: any) {
+    await api.updateRaidEx(event);
+    commit('updateEvent', event);
+  },
 };
 
 const mutations = {
@@ -62,6 +66,15 @@ const mutations = {
       type: raid.type,
     }));
     _state.events = events;
+  },
+  updateEvent(_state: RaidExStoreType, raidEx: RaidExType) {
+    const pos = _state.events.findIndex((event) => event.id === raidEx.id);
+    if (pos > -1) {
+      const existingRaidEx = _state.events[pos];
+      existingRaidEx.start = raidEx.start;
+      existingRaidEx.end = raidEx.end;
+      _state.events.splice(pos, 1, existingRaidEx);
+    }
   },
 };
 

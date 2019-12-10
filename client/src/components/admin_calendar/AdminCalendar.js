@@ -106,7 +106,7 @@ class AdminCalendar extends Vue {
 
   @Watch('$store.state.raidex.events', { immediate: true })
   onEventsStored(events: Array<EventType>) {
-    this.events = [...events];
+    this.events = [...events.map((event) => ({ ...event }))];
   }
 
   onCancelEvent(eventToDelete: EventType) {
@@ -178,19 +178,11 @@ class AdminCalendar extends Vue {
       }
 
       // ready to save
-      if (this.eventToUpdate.start && this.eventToUpdate.end) {
-        // save in BD
+      if (this.eventToUpdate && this.eventToUpdate.start && this.eventToUpdate.end) {
+        // update the event in db
+        this.$store.dispatch('raidex/updateEvent', this.eventToUpdate);
 
-        const pos = this.events.findIndex((event) => event.id === (this.eventToUpdate ? this.eventToUpdate.id : -1));
-        if (pos === -1) {
-          throw Error('Impossible to update the bind event');
-        }
-
-        if (this.eventToUpdate) {
-          this.events.splice(pos, 1, this.eventToUpdate);
-
-          this.eventToUpdate = null;
-        }
+        this.eventToUpdate = null;
       }
     }
   }
