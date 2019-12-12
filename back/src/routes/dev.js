@@ -1,8 +1,8 @@
 // @flow
 
-import express from 'express';
+import { Router } from 'express';
 
-const router = express.Router();
+const router: Router<> = Router();
 
 router.use((req: express$Request, res: express$Response, next: express$NextFunction) => {
   res.header('Access-Control-Allow-Origin', '*');
@@ -12,8 +12,11 @@ router.use((req: express$Request, res: express$Response, next: express$NextFunct
   next();
 });
 
-router.use((req: express$Request & { session: Object }, res: express$Response, next: express$NextFunction) => {
-  req.session.userGroup = req.session.userGroup || 'admin';
+router.use((req: { ...express$Request, session?: Object }, res: express$Response, next: express$NextFunction) => {
+  if (!req.session) {
+    req.session = {};
+  }
+  req.session.type = req.session.type || 'admin';
   next();
 });
 

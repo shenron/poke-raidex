@@ -1,22 +1,22 @@
 // @flow
 
-import express from 'express';
+import { Router } from 'express';
+import { comparePassword } from '@/controllers/authentication';
 import { controllerHandler } from '@/_base/utils';
 
-const router = express.Router();
+const router: Router<> = Router();
 
 const c = controllerHandler;
 
-router.post('/', c(async (user: string, password: string, sessionId, session: Object) => {
+router.post('/', c(async (user: string, password: string) => {
   try {
-    console.log(user, password, sessionId, session);
-    // check validity
+    return comparePassword(user, password);
   } catch (e) {
     throw Error(e);
   }
-}, (req) => [req.body.userGroup, req.body.password, req.sessionID]));
+}, (req) => [req.body.user, req.body.password]));
 
-// if connected return `userGroup`, else throw error
+// if connected return `user`, else throw error
 // router.get('/', c(isConnected));
 
 export default router;

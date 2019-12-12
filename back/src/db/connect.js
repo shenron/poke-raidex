@@ -2,7 +2,7 @@
 
 import Mongoose from 'mongoose';
 import config from '../config/config.dev';
-import { initGroups } from './init';
+import init from './init';
 
 Mongoose.Promise = global.Promise;
 
@@ -17,9 +17,10 @@ const connectToDb = async () => {
     console.info('Connected to mongo!!!');
     console.info(`mongodb://${dbHost}:${dbPort}/${dbName}`);
 
-    await initGroups();
+    await init();
   } catch (err) {
     console.error('Could not connect to MongoDB');
+    console.log(err);
   }
 };
 

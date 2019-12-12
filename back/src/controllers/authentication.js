@@ -1,25 +1,30 @@
 // @flow
 
-/*
-import UserGroup from '../models/UserGroup';
+import UserModel from '../models/User';
 
-export async function isValid(groupName: string, password: string) {
-  const query = UserGroup.findOne({
-    name: groupName.trim().toLowerCase(),
-  });
+export async function comparePassword(userName: string, password: string) {
+  const user = await UserModel
+    .findOne({
+      user: userName.trim().toLowerCase(),
+    })
+    .select('password');
 
-  const userGroup = await query.select('+_password');
-  if (!userGroup || (userGroup && UserGroup.cryptPassword(password) !== userGroup._password)) {
-    throw Error('User name / Password incorrect');
+  if (!user) {
+    throw Error('The username does not exist');
   }
 
-  return true;
+  if (!(await user.comparePassword(password))) {
+    throw Error('The password is invalid');
+  }
+
+  return UserModel.findOne({
+    user: userName.trim().toLowerCase(),
+  });
 }
 
 export async function isConnected(session: Object) {
-  if (!session.userGroup) {
+  if (!session.user) {
     throw Error('Not connected');
   }
-  return session.userGroup;
+  return session.user;
 }
-*/

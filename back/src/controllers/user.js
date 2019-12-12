@@ -6,5 +6,7 @@ export default {
 };
 
 export async function getUsers() {
-  return User.find({});
+  return User
+    .find({})
+    .populate('accounts');
 }

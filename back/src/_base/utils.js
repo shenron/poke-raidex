@@ -1,7 +1,7 @@
 // @flow
 
 export const controllerHandler = (promise: Function, params?: Function) => async (
-  req: express$Request & { session: Object },
+  req: { ...express$Request, session?: { [id: string]: string } },
   res: express$Response,
   next: express$NextFunction,
 ) => {

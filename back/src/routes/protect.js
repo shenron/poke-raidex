@@ -1,14 +1,14 @@
 // @flow
 
-import express from 'express';
+import { Router } from 'express';
 
-const router = express.Router();
+const router: Router<> = Router();
 
 /**
  * Express middleware to protect route
  */
-router.use((req: express$Request & { session: Object }, res: express$Response, next: express$NextFunction) => {
-  if (req.session.userGroup) {
+router.use((req: { ...express$Request, session?: Object }, res: express$Response, next: express$NextFunction) => {
+  if (req.session && req.session.user) {
     return next();
   }
 

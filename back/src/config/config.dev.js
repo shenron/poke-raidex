@@ -15,7 +15,7 @@ const config: {
   dbHost: process.env.DB_HOST || 'localhost',
   dbPort: process.env.DB_PORT || '27017',
   dbName: process.env.DB_NAME || 'dev',
-  serverPort: Number(process.env.BACK_PORT) || 3000,
+  serverPort: Number(process.env.BACK_PORT) || 3500,
 };
 
 export default config;

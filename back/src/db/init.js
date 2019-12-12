@@ -2,11 +2,13 @@
 
 import User from '../models/User';
 
-const initGroups = async () => Promise.all([{
-  name: 'admin',
-  password: 'admin',
+const init = async () => Promise.all([{
+  user: 'admin',
+  password: process.env.ADMIN_PWD || 'admin',
+  type: 'admin',
+  accounts: [],
 }].map(async (user) => {
-  const query = User.findOne({ name: user.name });
+  const query = User.findOne({ user: user.user });
 
   if (!(await query.exec())) {
     return new User(user).save();
@@ -15,6 +17,4 @@ const initGroups = async () => Promise.all([{
   return true;
 }));
 
-export default initGroups;
-
-export { initGroups };
+export default init;

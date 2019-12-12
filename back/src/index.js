@@ -2,9 +2,11 @@
 
 import express from 'express';
 import session from 'express-session';
+import bodyParser from 'body-parser';
 import mongoDBStore from 'connect-mongodb-session';
 import devRoute from '@/routes/dev';
 import routesUsers from '@/routes/users';
+import routesAuthentication from '@/routes/authentication';
 import connectToDb from '@/db/connect';
 import config from '@/config/config.dev';
 
@@ -33,6 +35,10 @@ const sessionConfig = {
 
 app.set('trust proxy', 1); // trust first proxy
 
+app.use(bodyParser.json());
+
+app.use(bodyParser.urlencoded({ extended: true }));
+
 app.use(session(sessionConfig));
 
 if (app.get('env') !== 'production') {
@@ -41,5 +47,6 @@ if (app.get('env') !== 'production') {
 
 app.get('/api', (req: express$Request, res: express$Response) => res.send('Welcome !'));
 app.use('/api/users', routesUsers);
+app.use('/api/auth', routesAuthentication);
 
 app.listen(config.serverPort, () => console.log(`Back run on port ${config.serverPort}!`));
