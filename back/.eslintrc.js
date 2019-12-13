@@ -26,6 +26,8 @@ module.exports = {
     'flowtype-errors/show-errors': 2,
     'flowtype-errors/show-warnings': 1,
     'max-len': [2, 150, 4],
+    'no-param-reassign': 0,
+    'no-underscore-dangle': 0,
   },
   settings: {
     flowtype: {

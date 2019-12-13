@@ -1,7 +1,7 @@
 // @flow
 
 import Mongoose from 'mongoose';
-import config from '../config/config.dev';
+import config from '@/config';
 import init from './init';
 
 Mongoose.Promise = global.Promise;

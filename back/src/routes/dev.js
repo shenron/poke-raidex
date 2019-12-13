@@ -12,12 +12,4 @@ router.use((req: express$Request, res: express$Response, next: express$NextFunct
   next();
 });
 
-router.use((req: { ...express$Request, session?: Object }, res: express$Response, next: express$NextFunction) => {
-  if (!req.session) {
-    req.session = {};
-  }
-  req.session.type = req.session.type || 'admin';
-  next();
-});
-
 export default router;

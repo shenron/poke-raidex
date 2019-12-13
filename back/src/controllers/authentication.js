@@ -2,7 +2,7 @@
 
 import UserModel from '../models/User';
 
-export async function comparePassword(userName: string, password: string) {
+export async function login(userName: string, password: string, session: Object) {
   const user = await UserModel
     .findOne({
       user: userName.trim().toLowerCase(),
@@ -17,9 +17,11 @@ export async function comparePassword(userName: string, password: string) {
     throw Error('The password is invalid');
   }
 
-  return UserModel.findOne({
+  session.user = (await UserModel.findOne({
     user: userName.trim().toLowerCase(),
-  });
+  })).toObject();
+
+  return session.user;
 }
 
 export async function isConnected(session: Object) {
@@ -27,4 +29,8 @@ export async function isConnected(session: Object) {
     throw Error('Not connected');
   }
   return session.user;
+}
+
+export async function logOff(session: Object) {
+  session.user = null;
 }

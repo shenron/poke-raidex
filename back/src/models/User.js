@@ -5,6 +5,16 @@ import { model, Schema } from 'mongoose';
 
 const saltRounds = 10;
 
+const serialize = {
+  // to display `id`
+  virtuals: true,
+  transform(doc, user) {
+    delete user._id;
+  },
+  // exclude `_v`
+  versionKey: false,
+};
+
 const schema = new Schema({
   user: {
     type: String,
@@ -23,6 +33,9 @@ const schema = new Schema({
     required: true,
   },
   accounts: [{ type: Schema.Types.ObjectId, ref: 'User' }],
+}, {
+  toJSON: serialize,
+  toObject: serialize,
 });
 
 schema.pre('save', async function (next) {
@@ -32,11 +45,6 @@ schema.pre('save', async function (next) {
 
   this.password = await bcrypt.hash(this.password, saltRounds);
   return next();
-});
-
-// to display `id`
-schema.set('toJSON', {
-  virtuals: true,
 });
 
 schema.methods.comparePassword = async function (plaintext: string) {

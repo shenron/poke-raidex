@@ -12,6 +12,12 @@ export default {
   logOff() {
     return axios.delete('/api/auth');
   },
+  testSession() {
+    return axios.get('/api/auth');
+  },
+  /**
+   * create a user account
+   */
   registration(account: Object) {
     return axios.post('/api/user', account);
   },

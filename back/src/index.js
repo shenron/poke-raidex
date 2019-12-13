@@ -8,7 +8,7 @@ import devRoute from '@/routes/dev';
 import routesUsers from '@/routes/users';
 import routesAuthentication from '@/routes/authentication';
 import connectToDb from '@/db/connect';
-import config from '@/config/config.dev';
+import config from '@/config';
 
 const app = express();
 
@@ -29,7 +29,7 @@ const sessionConfig = {
   saveUninitialized: true,
   cookie: {
     maxAge: 24 * 60 * 60 * 1000, // 24 hours
-    secure: process.env.UNSECURE === undefined || process.env.UNSECURE === '' || process.env.UNSECURE === String(false),
+    secure: config.secure,
   },
 };
 
