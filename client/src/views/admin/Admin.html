@@ -10,7 +10,7 @@
     </v-flex>
   </v-layout>
 
-  <AdminCalendar/>
+  <router-view :key="$route.fullPath"></router-view>
 
   <v-bottom-navigation fixed
     grow
@@ -21,9 +21,19 @@
       <v-icon>mdi-home</v-icon>
     </v-btn>
 
-    <v-btn value="SETTINGS">
-      <span>Mon Compte</span>
+    <v-btn value="ADMIN">
+      <span>Administration</span>
       <v-icon>mdi-settings</v-icon>
+    </v-btn>
+
+    <v-btn value="ADMIN-USERS-MANAGEMENT">
+      <span>Inscrits</span>
+      <v-icon>mdi-account-multiple</v-icon>
+    </v-btn>
+
+    <v-btn value="MANAGE-ACCOUNTS">
+      <span>Mon Compte</span>
+      <v-icon>mdi-account</v-icon>
     </v-btn>
   </v-bottom-navigation>
 </v-container>

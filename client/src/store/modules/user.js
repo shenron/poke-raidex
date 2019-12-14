@@ -10,6 +10,7 @@ export type UserStateType = {|
   id: ?string,
   user: string,
   type: ?string,
+  isActive?: boolean,
   accounts: Array<IdLabelType>,
 |};
 

@@ -4,6 +4,8 @@ import Home from './views/home/Home.vue';
 import Login from './views/login/Login.vue';
 import Registration from './views/registration/Registration.vue';
 import Admin from './views/admin/Admin.vue';
+import AdminCalendar from './views/admin_calendar/AdminCalendar.vue';
+import AdminUsersManagement from './views/admin_users_management/AdminUsersManagement.vue';
 import Event from './views/event/Event.vue';
 import Settings from './views/settings/Settings.vue';
 import store from './store';
@@ -44,8 +46,16 @@ const router = new Router({
     },
     {
       path: '/admin',
-      name: 'admin',
       component: Admin,
+      children: [{
+        path: '/',
+        name: 'admin',
+        component: AdminCalendar,
+      }, {
+        path: '/users',
+        name: 'admin-users-management',
+        compoment: AdminUsersManagement,
+      }],
     },
   ],
 });

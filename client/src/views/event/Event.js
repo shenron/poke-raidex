@@ -6,7 +6,7 @@ import {
 import ConfirmSubscription from '@/components/confirm_subscription/ConfirmSubscription.vue';
 import UserList from '@/components/user_list/UserList.vue';
 
-type EventRoutesType = 'LIST' | 'SUBSCRIPTION' | 'HOME';
+type EventRoutesType = 'LIST' | 'SUBSCRIPTION' | 'HOME' | 'SETTINGS';
 
 export default
 @Component({
@@ -20,8 +20,8 @@ class Event extends Vue {
 
   @Watch('activeBtn')
   onActiveBtnChanged(activeBtn: EventRoutesType) {
-    if (activeBtn === 'HOME') {
-      this.$router.push({ name: 'home' });
+    if (activeBtn === 'HOME' || activeBtn === 'SETTINGS') {
+      this.$router.push({ name: activeBtn.toLowerCase() });
     }
   }
 

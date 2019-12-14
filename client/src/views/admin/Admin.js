@@ -1,16 +1,11 @@
 // @flow
 
 import { Component, Watch, Vue } from 'vue-property-decorator';
-import AdminCalendar from '@/components/admin_calendar/AdminCalendar.vue';
 
 export default
-@Component({
-  components: {
-    AdminCalendar,
-  },
-})
+@Component
 class Admin extends Vue {
-  activeBtn: string = '';
+  activeBtn: string = 'ADMIN';
 
   @Watch('activeBtn')
   onActiveBtnChanged(activeBtn: string) {
