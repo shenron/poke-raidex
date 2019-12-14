@@ -6,6 +6,8 @@ export async function login(userName: string, password: string, session: Object)
   const user = await UserModel
     .findOne({
       user: userName.trim().toLowerCase(),
+      isActive: true,
+      isMainAccount: true,
     })
     .select('password');
 

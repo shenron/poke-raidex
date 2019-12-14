@@ -10,6 +10,7 @@ const serialize = {
   virtuals: true,
   transform(doc, user) {
     delete user._id;
+    delete user.password;
   },
   // exclude `_v`
   versionKey: false,
@@ -33,6 +34,18 @@ const schema = new Schema({
     required: true,
   },
   accounts: [{ type: Schema.Types.ObjectId, ref: 'User' }],
+
+  // by default an account is not activated, ony the admin can toggle
+  isActive: {
+    type: Boolean,
+    default: false,
+  },
+
+  // only main account can logon
+  isMainAccount: {
+    type: Boolean,
+    required: true,
+  },
 }, {
   toJSON: serialize,
   toObject: serialize,

@@ -5,7 +5,9 @@ import User from '../models/User';
 const init = async () => Promise.all([{
   user: 'admin',
   password: process.env.ADMIN_PWD || 'admin',
-  type: 'admin',
+  type: 'ADMIN',
+  isMainAccount: true,
+  isActive: true,
   accounts: [],
 }].map(async (user) => {
   const query = User.findOne({ user: user.user });

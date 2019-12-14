@@ -8,7 +8,7 @@ export const controllerHandler = (promise: Function, params?: Function) => async
   const boundParams = params ? params(req, res, next) : [];
   try {
     const result = await promise(...boundParams.concat([req.session]));
-    return res.json(result || { message: 'OK' });
+    return res.json(result !== undefined ? result : { message: 'OK' });
   } catch (error) {
     return res.status(500) && next(error);
   }
