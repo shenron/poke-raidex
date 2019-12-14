@@ -5,9 +5,11 @@
 >
   <v-text-field
     v-model="user"
+    @input="onMainAccountUpdated"
     :rules="userRules"
     label="Nom"
     required
+    :error-messages="userErrors[0]"
   ></v-text-field>
 
   <v-text-field :key="i" v-for="(account, i) in accounts"
@@ -16,6 +18,7 @@
     @input="onAccountUpdated(i)"
     @change="onAccountChanged"
     :rules="accountsRules(i)"
+    :error-messages="userErrors[i + 1]"
     required
   ></v-text-field>
 

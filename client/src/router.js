@@ -2,7 +2,7 @@ import Vue from 'vue';
 import Router from 'vue-router';
 import Home from './views/home/Home.vue';
 import Login from './views/login/Login.vue';
-import Inscription from './views/inscription/Inscription.vue';
+import Registration from './views/registration/Registration.vue';
 import Admin from './views/admin/Admin.vue';
 import Event from './views/event/Event.vue';
 import Settings from './views/settings/Settings.vue';
@@ -37,10 +37,10 @@ const router = new Router({
       component: Login,
     },
     {
-      path: '/inscription',
-      name: 'inscription',
+      path: '/registration',
+      name: 'registration',
       meta: { unsecure: true },
-      component: Inscription,
+      component: Registration,
     },
     {
       path: '/admin',

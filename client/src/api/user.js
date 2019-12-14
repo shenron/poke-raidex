@@ -19,6 +19,9 @@ export default {
    * create a user account
    */
   registration(account: Object) {
-    return axios.post('/api/user', account);
+    return axios.post('/api/auth/user', account);
+  },
+  isAvailableUser(user: string) {
+    return axios.get(`/api/auth/${user}/available`);
   },
 };
