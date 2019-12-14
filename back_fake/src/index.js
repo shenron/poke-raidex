@@ -17,12 +17,24 @@ const server = http.createServer(app);
 
 // Static values
 const accounts = [
-  { id: '1', label: 'Admin' },
-  { id: '2', label: 'Test' },
-  { id: '3', label: 'Martine' },
-  { id: '4', label: 'Gilberte' },
-  { id: '5', label: 'Maurice' },
-  { id: '6', label: 'Other' },
+  {
+    id: '1', type: 'ADMIN', isActive: true, label: 'Admin',
+  },
+  {
+    id: '2', type: 'DEFAULT', isActive: true, label: 'Test',
+  },
+  {
+    id: '3', type: 'DEFAULT', isActive: false, label: 'Martine',
+  },
+  {
+    id: '4', type: 'DEFAULT', isActive: false, label: 'Gilberte',
+  },
+  {
+    id: '5', type: 'DEFAULT', isActive: false, label: 'Maurice',
+  },
+  {
+    id: '6', type: 'DEFAULT', isActive: false, label: 'Other',
+  },
 ];
 
 const teams = [
@@ -167,6 +179,10 @@ const login = (req, res) => {
 app.post('/api/user', login);
 
 app.post('/api/auth', login);
+
+app.get('/api/auth', (req, res) => {
+  res.send(true);
+});
 
 app.get('/api/raidex', (req, res) => {
   res.send(events);
