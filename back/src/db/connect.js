@@ -1,15 +1,15 @@
 // @flow
 
-import Mongoose from 'mongoose';
+import mongoose from 'mongoose';
 import config from '@/config';
 import init from './init';
 
-Mongoose.Promise = global.Promise;
+mongoose.set('useCreateIndex', true);
 
 const connectToDb = async () => {
   const { dbHost, dbPort, dbName } = config;
   try {
-    await Mongoose.connect(`mongodb://${dbHost}:${dbPort}/${dbName}`, {
+    await mongoose.connect(`mongodb://${dbHost}:${dbPort}/${dbName}`, {
       useUnifiedTopology: true,
       useNewUrlParser: true,
     });

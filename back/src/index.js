@@ -7,6 +7,7 @@ import mongoDBStore from 'connect-mongodb-session';
 import devRoute from '@/routes/dev';
 import routesUsers from '@/routes/users';
 import routesAuthentication from '@/routes/authentication';
+import routesBrowses from '@/routes/browses';
 import protectRoutes from '@/routes/protect';
 import connectToDb from '@/db/connect';
 import config from '@/config';
@@ -49,5 +50,6 @@ if (app.get('env') !== 'production') {
 app.get('/api', (req: express$Request, res: express$Response) => res.send('Welcome !'));
 app.use('/api/auth', routesAuthentication);
 app.use('/api/users', protectRoutes, routesUsers);
+app.use('/api/browses', protectRoutes, routesBrowses);
 
 app.listen(config.serverPort, () => console.log(`Back run on port ${config.serverPort}!`));

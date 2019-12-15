@@ -15,6 +15,9 @@ const app = express();
 
 const server = http.createServer(app);
 
+// trust first proxy
+app.set('trust proxy', 1);
+
 // Static values
 const accounts = [
   {
@@ -136,9 +139,6 @@ const events = [
 
 const areas = [{ id: '1', label: 'Chaudron' }, { id: '2', label: 'Princesse Pauline' }, { id: '3', label: 'Mougins' }];
 
-// trust first proxy
-app.set('trust proxy', 1);
-
 const newSession = session({
   secret: '9890ILHLKH;lkasf90098',
   resave: false,
@@ -175,6 +175,10 @@ const login = (req, res) => {
     accounts: accounts.slice(2),
   });
 };
+
+app.get('/api/admin/users', (req, res) => {
+  res.send(accounts);
+});
 
 app.post('/api/user', login);
 
