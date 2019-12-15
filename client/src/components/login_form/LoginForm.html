@@ -11,6 +11,7 @@
   ></v-text-field>
 
   <v-text-field
+
     v-model="password"
     :rules="passwordRules"
     label="Mot de passe"
@@ -18,14 +19,17 @@
     required
   ></v-text-field>
 
-  <v-btn
-    :disabled="!valid"
+  <v-btn :disabled="!valid"
     color="success"
     class="mr-4"
-    type="submit"
-  >
+    type="submit">
     Validate
   </v-btn>
 
   <a href="#" @click.stop.prevent="$router.push({ name: 'registration' })" title="Inscription">Pas encore inscrit?</a>
+
+  <v-alert v-if="error"
+    type="error" class="mt-4">
+    {{ error }}
+  </v-alert>
 </v-form>

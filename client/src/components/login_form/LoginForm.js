@@ -11,21 +11,23 @@ class LoginForm extends Vue {
 
   password: ?string = null;
 
-  userRules: Array<(string) => ?(string | boolean)> = [
-    (v) => !!v || 'Le pseudo est obligatoire!',
-  ];
+  userRules: Array<(string) => ?(string | boolean)> = [(v) => !!v || 'Le pseudo est obligatoire!'];
 
-  passwordRules: Array<(string) => ?(string | boolean)> = [
-    (v) => !!v || 'Le mot de passe est obligatoire!',
-  ];
+  passwordRules: Array<(string) => ?(string | boolean)> = [(v) => !!v || 'Le mot de passe est obligatoire!'];
+
+  error: string = '';
 
   async onSubmit() {
     const { user, password } = this;
 
-    const { id } = await this.$store.dispatch('user/login', { user, password });
+    try {
+      const { id } = await this.$store.dispatch('user/login', { user, password });
 
-    if (id) {
-      this.$emit('logged');
+      if (id) {
+        this.$emit('logged');
+      }
+    } catch (e) {
+      this.error = 'Nom d\'utilisateur ou mot de passe incorrect';
     }
   }
 }

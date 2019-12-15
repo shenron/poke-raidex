@@ -24,4 +24,7 @@ export default {
   isAvailableUser(user: string) {
     return axios.get(`/api/auth/${user}/available`);
   },
+  getUsers() {
+    return axios.get('/api/admin/users');
+  },
 };

@@ -1,6 +1,22 @@
 <v-container>
   <v-layout text-center
+
     wrap>
     <p>My settings</p>
   </v-layout>
+
+  <v-bottom-navigation fixed
+    grow
+    v-model="activeBtn"
+    color="deep-purple accent-4">
+    <v-btn value="HOME">
+      <span>Accueil</span>
+      <v-icon>mdi-home</v-icon>
+    </v-btn>
+
+    <v-btn value="SETTINGS">
+      <span>Mon Compte</span>
+      <v-icon>mdi-account</v-icon>
+    </v-btn>
+  </v-bottom-navigation>
 </v-container>

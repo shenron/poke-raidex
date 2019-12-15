@@ -48,13 +48,13 @@ const router = new Router({
       path: '/admin',
       component: Admin,
       children: [{
-        path: '/',
+        path: '',
         name: 'admin',
         component: AdminCalendar,
       }, {
-        path: '/users',
+        path: 'users',
         name: 'admin-users-management',
-        compoment: AdminUsersManagement,
+        component: AdminUsersManagement,
       }],
     },
   ],

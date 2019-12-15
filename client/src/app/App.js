@@ -1,26 +1,30 @@
 // @flow
 
-import { Component, Vue } from 'vue-property-decorator';
+import { Component, Vue, Watch } from 'vue-property-decorator';
 import userApi from '@/api/user';
+import type { UserStateType } from '@/store/modules/user';
 
 export default
 @Component
 class App extends Vue {
-  async created() {
-    try {
-      await userApi.testSession();
-
-      this.$store.dispatch('raidex/getAreas');
-      this.$store.dispatch('raidex/getTeams');
-      this.$store.dispatch('raidex/getTypes');
-      this.$store.dispatch('raidex/getEvents');
-    } catch (e) {
-      this.logOff();
-    }
-  }
-
   get user() {
     return this.$store.state.user;
+  }
+
+  @Watch('user', { deep: true })
+  async onUserConnected(user: UserStateType) {
+    if (user.id) {
+      try {
+        await userApi.testSession();
+
+        this.$store.dispatch('raidex/getAreas');
+        this.$store.dispatch('raidex/getTeams');
+        this.$store.dispatch('raidex/getTypes');
+        this.$store.dispatch('raidex/getEvents');
+      } catch (e) {
+        this.logOff();
+      }
+    }
   }
 
   async logOff() {

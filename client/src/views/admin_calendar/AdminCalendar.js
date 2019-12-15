@@ -1,12 +1,12 @@
 // @flow
 
 import { Component, Vue } from 'vue-property-decorator';
-import AdminCalendarComponent from '@/components/admin_calendar/AdminCalendar.vue';
+import EventsCalendar from '@/components/events_calendar/EventsCalendar.vue';
 
 export default
 @Component({
   components: {
-    AdminCalendar: AdminCalendarComponent,
+    EventsCalendar,
   },
 })
 class AdminCalendarView extends Vue {
