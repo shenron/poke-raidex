@@ -7,8 +7,10 @@ import mongoDBStore from 'connect-mongodb-session';
 import devRoute from '@/routes/dev';
 import routesUsers from '@/routes/users';
 import routesAuthentication from '@/routes/authentication';
+import routesAdmin from '@/routes/admin';
 import routesBrowses from '@/routes/browses';
 import protectRoutes from '@/routes/protect';
+import protectAdminRoutes from '@/routes/protectAdmin';
 import connectToDb from '@/db/connect';
 import config from '@/config';
 
@@ -51,5 +53,6 @@ app.get('/api', (req: express$Request, res: express$Response) => res.send('Welco
 app.use('/api/auth', routesAuthentication);
 app.use('/api/users', protectRoutes, routesUsers);
 app.use('/api/browses', protectRoutes, routesBrowses);
+app.use('/api/admin', protectAdminRoutes, routesAdmin);
 
 app.listen(config.serverPort, () => console.log(`Back run on port ${config.serverPort}!`));

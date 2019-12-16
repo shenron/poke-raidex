@@ -1,1 +1,15 @@
-<p>Management Cmp</p>
+<ul class="pb-8">
+  <li v-for="user in users" :key="user.id">
+    <v-row>
+      <v-col :cols="2" class="pt-8">
+        {{ user.user }}
+      </v-col>
+
+      <v-col :cols="4">
+        <v-switch v-model="user.isActive"
+          @change="toggleUserStatus(user)"
+          :label="user.isActive ? 'Active' : 'Inactive'"></v-switch>
+      </v-col>
+    </v-row>
+  </li>
+</ul>

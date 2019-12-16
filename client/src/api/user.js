@@ -27,4 +27,10 @@ export default {
   getUsers() {
     return axios.get('/api/admin/users');
   },
+  toggleUserStatus(id: string, isActive: boolean) {
+    if (isActive) {
+      return axios.put(`/api/admin/users/${id}/enable`);
+    }
+    return axios.put(`/api/admin/users/${id}/disable`);
+  },
 };

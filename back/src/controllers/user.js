@@ -4,15 +4,16 @@ import User from '@/models/User';
 
 export async function getUsers() {
   return User
-    .find({})
+    .find({
+      isMainAccount: true,
+    })
     .populate('accounts');
 }
 
 export async function isAvailableUser(userName: string) {
-  const user = await User
-    .findOne({
-      user: userName,
-    });
+  const user = await User.findOne({
+    user: userName,
+  });
 
   return !user;
 }
@@ -49,4 +50,15 @@ export async function addUser(user: string, password: string, accounts: Array<st
   await userModel.save();
 
   return userModel.toObject();
+}
+
+export async function setIsActive(id: string, isActive: boolean) {
+  const user = await User.findOne({
+    _id: id,
+  });
+
+  user.isActive = isActive;
+
+  await user.save();
+  return true;
 }

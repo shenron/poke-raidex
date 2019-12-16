@@ -19,24 +19,24 @@ const server = http.createServer(app);
 app.set('trust proxy', 1);
 
 // Static values
-const accounts = [
+const accountsBrowse = [
   {
-    id: '1', type: 'ADMIN', isActive: true, label: 'Admin',
+    id: '1', label: 'Admin',
   },
   {
-    id: '2', type: 'DEFAULT', isActive: true, label: 'Test',
+    id: '2', label: 'Test',
   },
   {
-    id: '3', type: 'DEFAULT', isActive: false, label: 'Martine',
+    id: '3', label: 'Martine',
   },
   {
-    id: '4', type: 'DEFAULT', isActive: false, label: 'Gilberte',
+    id: '4', label: 'Gilberte',
   },
   {
-    id: '5', type: 'DEFAULT', isActive: false, label: 'Maurice',
+    id: '5', label: 'Maurice',
   },
   {
-    id: '6', type: 'DEFAULT', isActive: false, label: 'Other',
+    id: '6', label: 'Other',
   },
 ];
 
@@ -65,25 +65,25 @@ const events = [
         subscriptions: [
           {
             userId: '1',
-            userName: accounts.find((u) => u.id === '1').label,
+            userName: accountsBrowse.find((u) => u.id === '1').label,
             teamId: '1',
             teamName: teams.find((t) => t.id === '1').label,
           },
           {
             userId: '3',
-            userName: accounts.find((u) => u.id === '3').label,
+            userName: accountsBrowse.find((u) => u.id === '3').label,
             teamId: '2',
             teamName: teams.find((t) => t.id === '2').label,
           },
           {
             userId: '4',
-            userName: accounts.find((u) => u.id === '4').label,
+            userName: accountsBrowse.find((u) => u.id === '4').label,
             teamId: '1',
             teamName: teams.find((t) => t.id === '1').label,
           },
           {
             userId: '5',
-            userName: accounts.find((u) => u.id === '5').label,
+            userName: accountsBrowse.find((u) => u.id === '5').label,
             teamId: '2',
             teamName: teams.find((t) => t.id === '2').label,
           },
@@ -95,13 +95,13 @@ const events = [
         subscriptions: [
           {
             userId: '2',
-            userName: accounts.find((u) => u.id === '2').label,
+            userName: accountsBrowse.find((u) => u.id === '2').label,
             teamId: '1',
             teamName: teams.find((t) => t.id === '1').label,
           },
           {
             userId: '5',
-            userName: accounts.find((u) => u.id === '5').label,
+            userName: accountsBrowse.find((u) => u.id === '5').label,
             teamId: '1',
             teamName: teams.find((t) => t.id === '1').label,
           },
@@ -172,12 +172,26 @@ const login = (req, res) => {
     user: req.body.user,
     id,
     type: req.body.user === 'admin' ? 'ADMIN' : 'OTHER',
-    accounts: accounts.slice(2),
+    accounts: accountsBrowse.slice(2),
   });
 };
 
 app.get('/api/admin/users', (req, res) => {
-  res.send(accounts);
+  res.send(accountsBrowse.map((account, i) => ({
+    id: account.id,
+    user: account.label,
+    type: account.label.toUpperCase() === 'ADMIN' ? 'ADMIN' : 'DEFAULT',
+    isActive: i % 2 === 0,
+    accounts: [],
+  })));
+});
+
+app.put('/api/admin/users/:id/enable', (req, res) => {
+  res.send('enable');
+});
+
+app.put('/api/admin/users/:id/disable', (req, res) => {
+  res.send('disable');
 });
 
 app.post('/api/user', login);

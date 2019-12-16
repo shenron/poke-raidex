@@ -11,7 +11,7 @@ class App extends Vue {
     return this.$store.state.user;
   }
 
-  @Watch('user', { deep: true })
+  @Watch('user', { deep: true, immediate: true })
   async onUserConnected(user: UserStateType) {
     if (user.id) {
       try {
