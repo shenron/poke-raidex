@@ -6,6 +6,7 @@ import bodyParser from 'body-parser';
 import mongoDBStore from 'connect-mongodb-session';
 import devRoute from '@/routes/dev';
 import routesUsers from '@/routes/users';
+import routeRaidEx from '@/routes/raidEx';
 import routesAuthentication from '@/routes/authentication';
 import routesAdmin from '@/routes/admin';
 import routesBrowses from '@/routes/browses';
@@ -52,6 +53,7 @@ if (app.get('env') !== 'production') {
 app.get('/api', (req: express$Request, res: express$Response) => res.send('Welcome !'));
 app.use('/api/auth', routesAuthentication);
 app.use('/api/users', protectRoutes, routesUsers);
+app.use('/api/raidex', protectRoutes, routeRaidEx);
 app.use('/api/browses', protectRoutes, routesBrowses);
 app.use('/api/admin', protectAdminRoutes, routesAdmin);
 

@@ -20,7 +20,7 @@ class App extends Vue {
         this.$store.dispatch('raidex/getAreas');
         this.$store.dispatch('raidex/getTeams');
         this.$store.dispatch('raidex/getTypes');
-        this.$store.dispatch('raidex/getEvents');
+        this.$store.dispatch('raidex/getRaidEx');
       } catch (e) {
         this.logOff();
       }

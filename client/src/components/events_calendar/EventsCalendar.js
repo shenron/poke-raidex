@@ -86,7 +86,7 @@ class AdminCalendar extends Vue {
   }
 
   get hourEventRules() {
-    const err = 'ex: 13h30';
+    const err = 'ex: 13:30';
     return [(value: ?string) => {
       if (!value) {
         return err;
@@ -96,12 +96,19 @@ class AdminCalendar extends Vue {
   }
 
   get isValidForm() {
-    let isValid = !!this.eventType && this.arenaId;
-    if (this.eventType === 'INFO') {
-      isValid = isValid && this.startEvent && this.hourEventRules.reduce((acc, v) => acc && v(this.hourEvent) === true, true);
+    const isValid = !!this.eventType && this.arenaId;
+    if (this.eventType === 'DEFAULT') {
+      return isValid && this.startEvent && this.hourEventRules.reduce((acc, v) => acc && v(this.hourEvent) === true, true);
+    } if (this.eventType === 'INFO') {
+      return isValid && this.startEvent && this.endEvent;
     }
+    return false;
+  }
 
-    return isValid && this.startEvent && this.endEvent;
+  @Watch('eventType')
+  onEventTypeChanged() {
+    this.endEvent = '';
+    this.hourEvent = '';
   }
 
   @Watch('$store.state.raidex.events', { immediate: true })
@@ -109,13 +116,10 @@ class AdminCalendar extends Vue {
     this.events = [...events.map((event) => ({ ...event }))];
   }
 
-  onCancelEvent(eventToDelete: EventType) {
+  onDeleteEvent(eventToDelete: EventType) {
     this.selectedOpen = false;
 
-    const pos = this.events.findIndex((event) => event.id === eventToDelete.id);
-    if (pos > -1) {
-      this.events.splice(pos, 1);
-    }
+    this.$store.dispatch('raidex/deleteRaidEx', eventToDelete.id);
   }
 
   getEventColor(event: Object) {
@@ -143,18 +147,16 @@ class AdminCalendar extends Vue {
       }
     }
 
-    if (!name || !this.startEvent || !this.endEvent || !this.arenaId) {
+    if (!name || !this.startEvent || !this.endEvent || !this.arenaId || !this.isValidForm) {
       return;
     }
 
     // before, save the event in BD
-    this.events.push({
-      id: '',
-      name,
+    this.$store.dispatch('raidex/addRaidEx', {
       start: this.startEvent,
-      end: this.endEvent,
-      color: this.eventColors[this.arenaId] || 'grey',
+      ...(this.eventType === 'DEFAULT' ? { hour: this.hourEvent } : { end: this.endEvent }),
       type: this.eventType || 'DEFAULT',
+      areaId: this.arenaId,
     });
   }
 

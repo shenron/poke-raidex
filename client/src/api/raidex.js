@@ -22,23 +22,27 @@ export type RaidExUserType = {|
 |};
 
 export type RaidExType = {|
-  id: string,
+  id?: string,
   type: 'INFO' | 'DEFAULT',
   users: Array<RaidExUserType>,
   areaId: string,
   start: string,
-  end: string,
+  end?: string,
+  hour?: string,
 |};
 
 export default {
   getRaidExList(): Promise<{| data: Array<RaidExType> |}> {
     return axios.get('/api/raidex');
   },
+  deleteRaidEx(id: string) {
+    return axios.delete(`/api/raidex/${id}`);
+  },
   getRaidEx(id: string): Promise<{| data: RaidExType |}> {
     return axios.get(`/api/raidex/${id}`);
   },
-  updateRaidEx(raidEx: RaidExType) {
-    return axios.put(`/api/raidex/${raidEx.id}`, {
+  addRaidEx(raidEx: RaidExType) {
+    return axios.post('/api/admin/raidex', {
       raidEx,
     });
   },

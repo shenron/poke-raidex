@@ -163,14 +163,14 @@
           flat>
           <v-toolbar :color="selectedEvent.color"
             dark>
-            <v-btn v-if="selectedEvent.type === 'DEFAULT'" icon
+            <v-btn v-if="selectedEvent.type === 'INFO'" icon
               @click="enableUpdateDateEvent(selectedEvent)">
               <v-icon>mdi-pencil</v-icon>
             </v-btn>
             <v-toolbar-title v-html="selectedEvent.name"></v-toolbar-title>
           </v-toolbar>
           <v-card-actions>
-            <v-btn @click="onCancelEvent(selectedEvent)">
+            <v-btn @click="onDeleteEvent(selectedEvent)">
               <v-icon>mdi-trash-can</v-icon>
             </v-btn>
           </v-card-actions>
