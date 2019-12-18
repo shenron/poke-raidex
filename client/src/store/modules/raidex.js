@@ -44,8 +44,11 @@ const actions: {
     commit('setEvents', data);
   },
   async addRaidEx({ commit }, event: RaidExType) {
-    await api.addRaidEx(event);
-    commit('addEvent', event);
+    const { data } = await api.addRaidEx(event);
+    commit('addEvent', {
+      ...event,
+      id: data.id,
+    });
   },
   async deleteRaidEx({ commit }, id: string) {
     await api.deleteRaidEx(id);

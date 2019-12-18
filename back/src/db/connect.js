@@ -6,6 +6,10 @@ import init from './init';
 
 mongoose.set('useCreateIndex', true);
 
+// fix conflicts between mongoose and mongodb
+// https://stackoverflow.com/questions/45388199/findandmodify-or-findoneandupdate-is-not-a-function
+mongoose.set('useFindAndModify', false);
+
 const connectToDb = async () => {
   const { dbHost, dbPort, dbName } = config;
   try {

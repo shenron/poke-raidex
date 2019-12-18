@@ -56,7 +56,7 @@ export default {
     return axios.get('/api/browses/raidex-types');
   },
   setSubscription(id: string, users: Array<UserEventType>) {
-    return axios.post(`/api/raidex/${id}/subscriptions`, {
+    return axios.post(`/api/raidex/${id}/subscription`, {
       users,
     });
   },

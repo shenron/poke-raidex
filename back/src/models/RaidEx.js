@@ -8,12 +8,10 @@ export type RaidExType = {|
   users: Array<{|
     id: string,
     user: string,
-    teamId: Array<string>,
-    // display name of user and team
     subscriptions: Array<{|
       userId: string,
-      teamId: string,
       userName: string,
+      teamId: string,
       teamName: string,
     |}>,
   |}>,
