@@ -62,3 +62,28 @@ export async function setIsActive(id: string, isActive: boolean) {
   await user.save();
   return true;
 }
+
+export async function addSubAccount(user: string, session: Object) {
+  const subAccount = new User({
+    user,
+    isActive: false,
+    isMainAccount: false,
+    type: 'DEFAULT',
+  });
+
+  const currentUser = await User.findOne({
+    _id: session.user.id,
+  });
+
+  currentUser.accounts.push(subAccount._id);
+
+  await Promise.all([
+    subAccount.save(),
+    currentUser.save(),
+  ]);
+
+  return {
+    id: subAccount._id,
+    label: user,
+  };
+}

@@ -40,10 +40,16 @@ const actions: {
     return commit('logOff');
   },
   async registration({ commit }, account: {| user: string, password: string, accounts: Array<string> |}) {
-    const user = await api.registration(account);
-    commit('setUser', user);
+    const { data } = await api.registration(account);
+    commit('setUser', data);
 
-    return user;
+    return data;
+  },
+  async addAccount({ commit }, accountName: string) {
+    const { data } = await api.addAccount(accountName);
+    commit('addAccount', data);
+
+    return data;
   },
 };
 
@@ -60,6 +66,11 @@ const mutations = {
     _state.user = user.user;
     _state.type = user.type;
     _state.accounts = user.accounts;
+
+    localStorage.setItem('user', JSON.stringify(_state));
+  },
+  addAccount(_state: UserStateType, account: IdLabelType) {
+    _state.accounts.push(account);
 
     localStorage.setItem('user', JSON.stringify(_state));
   },

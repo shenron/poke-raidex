@@ -243,19 +243,8 @@ class ConfirmSubscription extends Vue {
     openPopup(e);
   }
 
-  async createSubAccount(newAccountLabel: string) {
-    // fake id,
-    const id = String(Math.floor(Math.random() * (100 - 20 + 1) + 20));
-    const newUser = {
-      id,
-      label: newAccountLabel,
-    };
-
-    this.accountList.push({ id, label: newAccountLabel });
-
-    this.$store.commit('user/setAccounts', this.accountList);
-
-    return Promise.resolve(newUser);
+  createSubAccount(newAccountLabel: string) {
+    return this.$store.dispatch('user/addAccount', newAccountLabel);
   }
 
   @Prop({ type: String, required: true })

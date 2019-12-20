@@ -33,4 +33,9 @@ export default {
     }
     return axios.put(`/api/admin/users/${id}/disable`);
   },
+  addAccount(user: string) {
+    return axios.post('/api/users/account', {
+      user,
+    });
+  },
 };

@@ -25,7 +25,6 @@ const schema = new Schema({
   password: {
     type: String,
     unique: false,
-    required: true,
     select: false,
   },
   type: {
