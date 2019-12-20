@@ -1,6 +1,6 @@
 // @flow
 
-import { Component, Vue } from 'vue-property-decorator';
+import { Component, Prop, Vue } from 'vue-property-decorator';
 import RegistrationForm from '@/components/registration_form/RegistrationForm.vue';
 
 export default
@@ -25,4 +25,7 @@ class Login extends Vue {
       }
     });
   }
+
+  @Prop({ type: Boolean })
+  isDone: boolean;
 }

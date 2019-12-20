@@ -4,7 +4,14 @@
       <h1>Inscription</h1>
     </v-row>
     <v-row justify="space-around">
-      <RegistrationForm @logged="$router.push({ name: 'home' })" />
+      <RegistrationForm v-if="!isDone" @registered="$router.push({ name: 'registered' })" />
+      <div v-else>
+        <v-alert type="warning">
+          Compte enregistré, un adminstrateur va le valider dans les plus bref délais ;)
+        </v-alert>
+
+        <a href="#" @click.stop.prevent="$router.push({ name: 'login' })">Se connecter</a>
+      </div>
     </v-row>
   </v-col>
 </v-row>

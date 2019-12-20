@@ -40,9 +40,24 @@ const router = new Router({
     },
     {
       path: '/registration',
-      name: 'registration',
       meta: { unsecure: true },
-      component: Registration,
+      component: Vue.extend({
+        render(createElement) {
+          return createElement('router-view');
+        },
+      }),
+      children: [{
+        path: '',
+        name: 'registration',
+        meta: { unsecure: true },
+        component: Registration,
+      }, {
+        path: 'done',
+        name: 'registered',
+        meta: { unsecure: true },
+        props: () => ({ isDone: true }),
+        component: Registration,
+      }],
     },
     {
       path: '/admin',
