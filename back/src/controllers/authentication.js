@@ -3,7 +3,7 @@
 import UserModel from '../models/User';
 
 export async function login(userName: string, password: string, session: Object) {
-  const user = await UserModel
+  const userModel = await UserModel
     .findOne({
       user: userName.trim().toLowerCase(),
       isActive: true,
@@ -11,17 +11,26 @@ export async function login(userName: string, password: string, session: Object)
     })
     .select('password');
 
-  if (!user) {
+  if (!userModel) {
     throw Error('The username does not exist');
   }
 
-  if (!(await user.comparePassword(password))) {
+  if (!(await userModel.comparePassword(password))) {
     throw Error('The password is invalid');
   }
 
-  session.user = (await UserModel.findOne({
-    user: userName.trim().toLowerCase(),
-  })).toObject();
+  const user = (
+    await UserModel.findOne({
+      user: userName.trim().toLowerCase(),
+    }).populate('accounts')
+  ).toObject();
+
+  user.accounts = user.accounts.map((account) => ({
+    id: account.id,
+    label: account.user,
+  }));
+
+  session.user = user;
 
   return session.user;
 }
