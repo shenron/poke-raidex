@@ -158,17 +158,12 @@ class ConfirmSubscription extends Vue {
   deleteAccount() {
     this.deleteAccountConfirm = false;
 
-    // remove from selected
-    let pos = this.userEvents.findIndex((account) => account.userId === this.accountIdToDelete);
+    const pos = this.userEvents.findIndex((account) => account.userId === this.accountIdToDelete);
     if (pos > -1) {
       this.userEvents.splice(pos, 1);
     }
 
-    // remove from the available list
-    pos = this.accountList.findIndex((account) => account.id === this.accountIdToDelete);
-    this.accountList.splice(pos, 1);
-
-    this.$store.commit('user/setAccounts', this.accountList);
+    this.$store.dispatch('user/deleteAccount', this.accountIdToDelete);
   }
 
   getDistinctAccounts(userEvent: UserEventType): Array<IdLabelType> {

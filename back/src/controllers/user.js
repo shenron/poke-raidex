@@ -63,6 +63,15 @@ export async function setIsActive(id: string, isActive: boolean) {
   return true;
 }
 
+export async function deleteSubAccount(id: string) {
+  console.log(id);
+
+  // if in user accounts there is this user
+  // remove it from the child list
+  // remove all subscriptions with this user of next events
+  // remove it from the users schema
+}
+
 export async function addSubAccount(user: string, session: Object) {
   const subAccount = new User({
     user,

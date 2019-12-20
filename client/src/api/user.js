@@ -38,4 +38,7 @@ export default {
       user,
     });
   },
+  deleteAccount(userId: string) {
+    return axios.delete(`/api/users/accounts/${userId}`);
+  },
 };

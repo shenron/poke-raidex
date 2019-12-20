@@ -51,6 +51,11 @@ const actions: {
 
     return data;
   },
+  async deleteAccount({ commit }, accountId: string) {
+    await api.deleteAccount(accountId);
+
+    return commit('deleteAccount', accountId);
+  },
 };
 
 // mutations
@@ -66,6 +71,14 @@ const mutations = {
     _state.user = user.user;
     _state.type = user.type;
     _state.accounts = user.accounts;
+
+    localStorage.setItem('user', JSON.stringify(_state));
+  },
+  deleteAccount(_state: UserStateType, accountId: string) {
+    const pos = _state.accounts.findIndex((account) => account.id === accountId);
+    if (pos > -1) {
+      _state.accounts.splice(pos, 1);
+    }
 
     localStorage.setItem('user', JSON.stringify(_state));
   },
