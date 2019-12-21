@@ -1,13 +1,14 @@
 // @flow
 
 import { Component, Vue } from 'vue-property-decorator';
-import userApi from '@/api/user';
-import debounce from '@/_base/debounce';
-
-const ERROR_ALREADY_EXIST = 'Ce petit compte existe deja';
+import VInputAvailableUser from '@/components/input_available_user/VInputAvailableUser.vue';
 
 export default
-@Component
+@Component({
+  components: {
+    VInputAvailableUser,
+  },
+})
 class RegistrationForm extends Vue {
   valid: boolean = true;
 
@@ -19,65 +20,15 @@ class RegistrationForm extends Vue {
 
   accounts: Array<string> = [''];
 
-  userErrors: Array<?string> = [];
-
-  /**
-   * add a debounce to the existing test user
-   */
-  get testDebounceUser() {
-    // before insert the error, look if the array complete
-    const insertError = (i: number, msg: string) => {
-      while (this.userErrors.length < i) {
-        this.userErrors.push('');
-      }
-
-      // emit change for existing
-      if (i < this.userErrors.length) {
-        this.userErrors.splice(i, 1, msg);
-      } else {
-        this.userErrors.push(msg);
-      }
-    };
-
-    return debounce(async (i: number, user: string) => {
-      if (!user) {
-        return insertError(i, '');
-      }
-
-      const { data } = await userApi.isAvailableUser(user);
-      if (data) {
-        insertError(i, '');
-      } else {
-        insertError(i, ERROR_ALREADY_EXIST);
-      }
-    }, 100);
-  }
+  passwordRules: Array<(string) => ?(string | boolean)> = [
+    (v) => !!v || 'Le mot de passe est obligatoire!',
+  ];
 
   get passwordRulesBis(): Array<(string) => ?(string | boolean)> {
     return [
       ...this.passwordRules,
       (v) => v === this.password || 'Les mot de passes doivent etre identique',
     ];
-  }
-
-  onMainAccountUpdated() {
-    this.testDebounceUser(0, this.user);
-  }
-
-  /**
-   * When input, clear empty accounts
-   */
-  onAccountUpdated(i: number) {
-    const { length } = this.accounts;
-
-    if (!this.accounts[i] && i < length - 1) {
-      this.accounts.splice(i, 1);
-    }
-
-    this.testDebounceUser(
-      i + 1 /* errors are common for main user and sub accounts */,
-      this.accounts[i],
-    );
   }
 
   /**
@@ -89,23 +40,16 @@ class RegistrationForm extends Vue {
     }
   }
 
-  userRules: Array<(string) => ?(string | boolean)> = [
-    (v) => !!v || 'Le pseudo est obligatoire!',
-  ];
+  /**
+   * When input, clear empty accounts
+   */
+  onAccountUpdated(i: number) {
+    const { length } = this.accounts;
+    debugger;
 
-  passwordRules: Array<(string) => ?(string | boolean)> = [
-    (v) => !!v || 'Le mot de passe est obligatoire!',
-  ];
-
-  accountsRules(i: number): Array<(string) => ?(string | boolean)> {
-    return [
-      (v) => [
-        ...this.accounts,
-        this.user,
-      ]
-        .filter((account, j) => j !== i)
-        .filter((account) => account === v).length === 0 || ERROR_ALREADY_EXIST,
-    ];
+    if (!this.accounts[i] && i < length - 1) {
+      this.accounts.splice(i, 1);
+    }
   }
 
   async onSubmit() {

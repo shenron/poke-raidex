@@ -3,24 +3,20 @@
   v-model="valid"
   @submit.prevent="onSubmit"
 >
-  <v-text-field
-    v-model="user"
-    @input="onMainAccountUpdated"
-    :rules="userRules"
+  <VInputAvailableUser v-model="user"
     label="Nom"
-    required
-    :error-messages="userErrors[0]"
-  ></v-text-field>
+    :tmp-users="accounts.filter((a, i) => i > 0)"
+    :autofocus="!accounts.filter(Boolean).length"
+    required />
 
-  <v-text-field :key="i" v-for="(account, i) in accounts"
+  <VInputAvailableUser :key="i" v-for="(account, i) in accounts"
     v-model="accounts[i]"
     :label="'Petit compte (' + (i + 1) + ')'"
-    @input="onAccountUpdated(i)"
     @change="onAccountChanged"
-    :rules="accountsRules(i)"
-    :error-messages="userErrors[i + 1]"
-    required
-  ></v-text-field>
+    @input="onAccountUpdated(i)"
+    :autofocus="accounts.filter(Boolean).length && i === accounts.length - 1"
+    :tmp-users="[user, ...accounts.filter((a, j) => j !== i)]"
+  />
 
   <v-text-field
     v-model="password"
