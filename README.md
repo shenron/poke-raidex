@@ -14,7 +14,7 @@ An event called "RaidEx" has to be assigned to an arena. A user can subscribe fo
   - sagesse (blue)
   - instinct (yellow)
 
-The RaidEx completed it will be removed.
+The RaidEx finished, will be removed/disabled.
 
 ## Admin features
 
