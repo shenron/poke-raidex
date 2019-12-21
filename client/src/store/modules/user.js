@@ -39,10 +39,8 @@ const actions: {
     await api.logOff();
     return commit('logOff');
   },
-  async registration({ commit }, account: {| user: string, password: string, accounts: Array<string> |}) {
+  async registration(_: any, account: {| user: string, password: string, accounts: Array<string> |}) {
     const { data } = await api.registration(account);
-    commit('setUser', data);
-
     return data;
   },
   async addAccount({ commit }, accountName: string) {

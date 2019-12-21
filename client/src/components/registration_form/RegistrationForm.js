@@ -111,13 +111,13 @@ class RegistrationForm extends Vue {
   async onSubmit() {
     const { user, password, accounts } = this;
 
-    const { data } = await this.$store.dispatch('user/registration', {
+    const { id } = await this.$store.dispatch('user/registration', {
       user,
       password,
       accounts: accounts.filter(Boolean),
     });
 
-    if (data.id) {
+    if (id) {
       this.$emit('registered');
     }
   }
