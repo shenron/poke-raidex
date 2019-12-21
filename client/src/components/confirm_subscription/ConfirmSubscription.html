@@ -81,8 +81,10 @@
     </v-col>
 
     <v-col md="5">
-      <v-text-field v-model="freeAccount"
-                    label="Nouveau compte"></v-text-field>
+      <VInputAvailableUser v-model="freeAccount"
+                    @input="freeAccountTeamId = null"
+                    label="Nouveau compte"
+                    ref="newAccount"/>
     </v-col>
 
     <v-col md="4">

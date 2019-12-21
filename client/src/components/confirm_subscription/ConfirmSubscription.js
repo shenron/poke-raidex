@@ -10,6 +10,7 @@ import api, {
 import monthNames from '@/_base/monthNames';
 import type { UserStateType } from '@/store/modules/user';
 import type { IdLabelType } from '@/definitions/IdLabel.d';
+import VInputAvailableUser from '../input_available_user/VInputAvailableUser.vue';
 
 const {
   getRaidEx,
@@ -17,7 +18,11 @@ const {
 } = api;
 
 export default
-@Component
+@Component({
+  components: {
+    VInputAvailableUser,
+  },
+})
 class ConfirmSubscription extends Vue {
   // toggle the modal to save the subscription
   savedModal: boolean = false;
@@ -188,7 +193,7 @@ class ConfirmSubscription extends Vue {
 
   @Watch('freeUserEvent')
   async onWatchNewAccountChanged(freeAccount: UserEventType) {
-    if (freeAccount.userId && freeAccount.teamId) {
+    if (freeAccount.userId && freeAccount.teamId && !this.$refs.newAccount.error) {
       const newAccount = await this.createSubAccount(freeAccount.userId);
       this.userEvents.splice(this.userEvents.length - 1, 1, {
         userId: newAccount.id,
