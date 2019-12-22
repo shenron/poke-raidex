@@ -7,13 +7,25 @@ import User from '@/models/User';
 import Team from '@/models/Team';
 
 export async function getRaidExList() {
-  return RaidEx.find();
+  const raidEx = await RaidEx
+    .find()
+    .populate('type');
+
+  return raidEx.map((r) => ({
+    ...r.toObject(),
+    type: r.type.id,
+  }));
 }
 
 export async function getRaidEx(_id: string) {
-  return RaidEx
+  const raidEx = await RaidEx
     .findOne({ _id })
-    .populate('type areaId');
+    .populate('type');
+
+  return {
+    ...raidEx.toObject(),
+    type: raidEx.type.id,
+  };
 }
 
 export async function deleteRaidEx(id: string) {

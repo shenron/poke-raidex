@@ -17,9 +17,12 @@ class App extends Vue {
       try {
         await userApi.testSession();
 
-        this.$store.dispatch('raidex/getAreas');
-        this.$store.dispatch('raidex/getTeams');
-        this.$store.dispatch('raidex/getTypes');
+        await Promise.all([
+          this.$store.dispatch('raidex/getAreas'),
+          this.$store.dispatch('raidex/getTeams'),
+          this.$store.dispatch('raidex/getTypes'),
+        ]);
+
         this.$store.dispatch('raidex/getRaidEx');
       } catch (e) {
         this.logOff();

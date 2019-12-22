@@ -74,7 +74,7 @@ const mutations = {
       id: String(raid.id),
       start: raid.start,
       end: raid.end,
-      name: (_state.areas.find((area) => area.id === raid.areaId) || {}).label,
+      name: `${(_state.areas.find((area) => area.id === raid.areaId) || {}).label} (i)`,
       color: colors[i % 2],
       type: raid.type,
     }));
