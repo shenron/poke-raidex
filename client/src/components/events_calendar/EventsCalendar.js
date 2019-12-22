@@ -171,7 +171,7 @@ class AdminCalendar extends Vue {
     event.color = 'orange';
   }
 
-  updateDateEvent({ date }: { date: string }) {
+  async updateDateEvent({ date }: { date: string }) {
     if (this.eventToUpdate) {
       if (!this.eventToUpdate.start) {
         this.eventToUpdate.start = date;
@@ -182,7 +182,7 @@ class AdminCalendar extends Vue {
       // ready to save
       if (this.eventToUpdate && this.eventToUpdate.start && this.eventToUpdate.end) {
         // update the event in db
-        this.$store.dispatch('raidex/updateEvent', this.eventToUpdate);
+        await this.$store.dispatch('raidex/updateRaidExDate', this.eventToUpdate);
 
         this.eventToUpdate = null;
       }

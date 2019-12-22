@@ -54,8 +54,15 @@ const actions: {
     await api.deleteRaidEx(id);
     commit('deleteEvent', id);
   },
-  async updateEvent() {
-    //
+  async updateRaidExDate({ commit }, raidEx: EventType) {
+    await api.updateRaidExDate({
+      id: raidEx.id,
+      start: raidEx.start,
+      end: raidEx.end,
+      hour: raidEx.hour,
+    });
+
+    commit('updateEvent', raidEx);
   },
 };
 

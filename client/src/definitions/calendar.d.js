@@ -5,6 +5,7 @@ export type EventType = {|
   name: string,
   start: ?string,
   end: ?string,
+  hour: ?string,
   color: string,
   type: 'DEFAULT' | 'INFO',
 |};

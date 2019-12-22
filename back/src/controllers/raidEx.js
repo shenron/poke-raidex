@@ -28,6 +28,15 @@ export async function getRaidEx(_id: string) {
   };
 }
 
+export async function updateRaidExDate(id: string, date: { start: string, end: string, hour: string }) {
+  const raidEx = await RaidEx.findOne({ _id: id });
+  raidEx.start = date.start;
+  raidEx.end = date.end;
+  raidEx.hour = date.hour;
+
+  return raidEx.save();
+}
+
 export async function deleteRaidEx(id: string) {
   return RaidEx.deleteOne({ id });
 }

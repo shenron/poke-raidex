@@ -46,6 +46,13 @@ export default {
       raidEx,
     });
   },
+  updateRaidExDate(raidEx: {| id: string, start: ?string, end: ?string, hour: ?string |}) {
+    return axios.put(`/api/admin/raidex/${String(raidEx.id)}/date`, {
+      start: raidEx.start,
+      end: raidEx.end,
+      hour: raidEx.hour,
+    });
+  },
   getBrowseTeams(): Promise<{| data: Array<IdLabelType> |}> {
     return axios.get('/api/browses/teams');
   },

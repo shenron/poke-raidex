@@ -16,6 +16,7 @@ export type RaidExType = {|
       teamName: string,
     |}>,
   |}>,
+  hour: string,
   areaId: string,
   start: string,
   end: string,
