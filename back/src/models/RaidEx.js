@@ -5,6 +5,7 @@ import { model, Schema } from 'mongoose';
 export type RaidExType = {|
   id: string,
   type: 'INFO' | 'DEFAULT',
+  isFinished: boolean,
   users: Array<{|
     id: string,
     user: string,
@@ -41,6 +42,10 @@ const schema = new Schema({
   },
   hour: {
     type: String,
+  },
+  isFinished: {
+    type: Boolean,
+    default: false,
   },
   users: {
     type: Array,

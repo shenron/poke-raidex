@@ -55,7 +55,7 @@ const actions: {
     commit('deleteEvent', id);
   },
   async updateEvent() {
-    debugger;
+    //
   },
 };
 

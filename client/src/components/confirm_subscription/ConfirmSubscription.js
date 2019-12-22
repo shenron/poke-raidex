@@ -119,7 +119,8 @@ class ConfirmSubscription extends Vue {
   }
 
   get isValidForm() {
-    return !!this.userEvents.find((userEvent) => userEvent.userId && userEvent.teamId);
+    return !!this.userEvents.find((userEvent) => userEvent.userId && userEvent.teamId)
+      || (this.userEvents.length === 1 && !this.userEvents[0].userId);
   }
 
   get freeUserEvent(): UserEventType {

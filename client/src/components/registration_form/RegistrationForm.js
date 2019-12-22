@@ -45,7 +45,6 @@ class RegistrationForm extends Vue {
    */
   onAccountUpdated(i: number) {
     const { length } = this.accounts;
-    debugger;
 
     if (!this.accounts[i] && i < length - 1) {
       this.accounts.splice(i, 1);

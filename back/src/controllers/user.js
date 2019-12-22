@@ -1,6 +1,10 @@
 // @flow
 
+import { Types } from 'mongoose';
 import User from '@/models/User';
+import RaidEx from '@/models/RaidEx';
+
+const { ObjectId } = Types;
 
 export async function getUsers() {
   return User
@@ -63,13 +67,58 @@ export async function setIsActive(id: string, isActive: boolean) {
   return true;
 }
 
-export async function deleteSubAccount(id: string) {
-  console.log(id);
+export async function deleteSubAccount(id: string, session: Object) {
+  const promises = [];
 
-  // if in user accounts there is this user
+  // test if user is a sub-accounts of current user
+  const sessionSubAccountI = session.user.accounts.findIndex((account) => account.id === id);
+  if (sessionSubAccountI === -1) {
+    throw Error('Not allowed to delete this user');
+  }
+
+  let userModel;
+  try {
+    userModel = await User.findOne({ _id: session.user.id });
+  } catch (e) {
+    throw Error('User Not Found');
+  }
+
   // remove it from the child list
+  const pos = userModel.accounts.find((account) => account === id);
+  if (pos === -1) {
+    throw Error('Account Not Found');
+  }
+
+  userModel.accounts.splice(pos, 1);
+  promises.push(userModel.save());
+
   // remove all subscriptions with this user of next events
-  // remove it from the users schema
+  const userId = new ObjectId(id);
+  const raidExModel = await RaidEx.findOne({
+    isFinished: false, // keep history
+    'users.id': session.user.id,
+    'users.subscriptions.userId': userId,
+  });
+
+  if (raidExModel) {
+    const userI = raidExModel.users.findIndex((u) => u.id === session.user.id);
+    const subscriptionI = raidExModel.users[userI].subscriptions.findIndex(
+      (u) => u.userId.toString() === userId.toString(),
+    );
+
+    raidExModel.users[userI].subscriptions.splice(subscriptionI, 1);
+    raidExModel.users.splice(userI, 1, raidExModel.users[userI]);
+
+    promises.push(raidExModel.save());
+  }
+
+  // remove user
+  promises.push(User.deleteOne({ _id: id }));
+
+  // update the session
+  session.user.accounts.splice(sessionSubAccountI, 1);
+
+  return Promise.all(promises);
 }
 
 export async function addSubAccount(user: string, session: Object) {
@@ -91,8 +140,13 @@ export async function addSubAccount(user: string, session: Object) {
     currentUser.save(),
   ]);
 
-  return {
-    id: subAccount._id,
+  const newSubAccount = {
+    id: subAccount._id.toString(),
     label: user,
   };
+
+  // update the session
+  session.user.accounts.push(newSubAccount);
+
+  return newSubAccount;
 }
