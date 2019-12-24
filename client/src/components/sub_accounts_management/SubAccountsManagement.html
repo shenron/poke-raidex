@@ -1,0 +1,9 @@
+<v-form class="col-6">
+  <v-row v-for="subAccount in subAccounts">
+      {{ subAccount.label }}
+  </v-row>
+
+  <v-row>
+    <VInputAvailableUser v-model="newUser" />
+  </v-row>
+</v-form>

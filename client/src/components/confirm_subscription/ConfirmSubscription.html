@@ -4,39 +4,6 @@
   {{ areaLabel }}
   </p>
 
-  <v-dialog
-    v-model="deleteAccountConfirm"
-    max-width="290"
-    >
-    <v-card>
-      <v-card-title class="headline">Suppression</v-card-title>
-
-      <v-card-text>
-        Le Petit Compte va etre supprimé
-      </v-card-text>
-
-      <v-card-actions>
-        <v-spacer></v-spacer>
-
-        <v-btn
-          color="green darken-1"
-          text
-          @click="deleteAccountConfirm = false"
-          >
-          Non
-        </v-btn>
-
-          <v-btn
-            color="green darken-1"
-            text
-            @click="deleteAccount"
-            >
-            Oui
-          </v-btn>
-      </v-card-actions>
-    </v-card>
-  </v-dialog>
-
   <v-row v-for="(userEvent, i) in userEvents"
          :key="userEvent.userId"
          class="text--primary">
