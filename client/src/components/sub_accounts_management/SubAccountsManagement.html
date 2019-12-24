@@ -1,9 +1,17 @@
-<v-form class="col-6">
-  <v-row v-for="subAccount in subAccounts">
-      {{ subAccount.label }}
+<v-form>
+  <v-row v-for="account in subAccounts">
+   {{ account.label }}
   </v-row>
 
   <v-row>
-    <VInputAvailableUser v-model="newUser" />
+    <VInputAvailableUser @error="error = $event"
+      label="Nouveau petit compte"
+      v-model="newUser"
+      @success="error = null" />
+
+    <v-btn @click="addAccount"
+      class="mx-2" :disabled="!isValid"  fab :dark="isValid" small color="indigo">
+      <v-icon dark>mdi-plus</v-icon>
+    </v-btn>
   </v-row>
 </v-form>

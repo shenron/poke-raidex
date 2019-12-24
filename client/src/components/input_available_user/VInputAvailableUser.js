@@ -6,6 +6,8 @@ import debounce from '@/_base/debounce';
 
 const ERROR_ALREADY_EXIST = 'Ce petit compte existe deja';
 
+const ERROR_MINIMUM = 'Un minimum de 3 carcatères est nécessaire';
+
 export default
 @Component({
   inheritAttrs: false,
@@ -36,6 +38,7 @@ class VInputAvailableUser extends Vue {
   get rules(): Array<(string) => ?(string | boolean)> {
     const rules = [
       (v) => this.tmpUsers.filter((account) => account === v).length === 0 || ERROR_ALREADY_EXIST,
+      (v) => v.length >= 3 || ERROR_MINIMUM,
     ];
 
     if (this.required === '' || this.required === true) {
@@ -48,6 +51,15 @@ class VInputAvailableUser extends Vue {
   onChange(user: string) {
     this.testDebounceUser(user);
     return this.$emit('input', user);
+  }
+
+  @Watch('error')
+  onErrorChanged(error: string) {
+    if (error) {
+      this.$emit('error', error);
+    } else {
+      this.$emit('success', this.value$);
+    }
   }
 
   @Watch('value', { immediate: true })
