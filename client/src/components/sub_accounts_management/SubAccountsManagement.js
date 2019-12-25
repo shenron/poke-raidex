@@ -15,6 +15,8 @@ class SubAccountsManagement extends Vue {
   // newUser error
   error: string = '';
 
+  dialogDelete: boolean = false;
+
   get isValid() {
     return !this.error && this.newUser.length >= 3;
   }
@@ -26,5 +28,13 @@ class SubAccountsManagement extends Vue {
   async addAccount() {
     await this.$store.dispatch('user/addAccount', this.newUser);
     this.newUser = '';
+  }
+
+  deleteAccount(userId: string) {
+    return this.$store.dispatch('user/deleteAccount', userId);
+  }
+
+  closeDeleteDialog() {
+    this.dialogDelete = false;
   }
 }

@@ -1,10 +1,47 @@
 <v-form>
-  <v-row v-for="account in subAccounts">
-   {{ account.label }}
+  <v-row :key="account.id" v-for="account in subAccounts">
+    <v-text-field readonly :value="account.label"></v-text-field>
+
+    <v-btn @click.stop="dialogDelete = true"
+      class="mx-2" fab dark small color="indigo">
+      <v-icon dark>mdi-minus</v-icon>
+    </v-btn>
+
+    <v-dialog
+      v-model="dialogDelete"
+      max-width="290"
+    >
+      <v-card>
+        <v-card-title class="headline">Supprimer?</v-card-title>
+
+        <v-card-text>Supprimer définitivement le compte</v-card-text>
+
+        <v-card-actions>
+          <v-spacer></v-spacer>
+
+          <v-btn
+            color="green darken-1"
+            text
+            @click="deleteAccount(account.id)"
+          >
+            Oui
+          </v-btn>
+
+          <v-btn
+            color="green darken-1"
+            text
+            @click="dialogDelete = false"
+          >
+            Non
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
   </v-row>
 
   <v-row>
-    <VInputAvailableUser @error="error = $event"
+    <VInputAvailableUser
+      @error="error = $event"
       label="Nouveau petit compte"
       v-model="newUser"
       @success="error = null" />

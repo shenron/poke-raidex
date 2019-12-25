@@ -6,7 +6,7 @@ import debounce from '@/_base/debounce';
 
 const ERROR_ALREADY_EXIST = 'Ce petit compte existe deja';
 
-const ERROR_MINIMUM = 'Un minimum de 3 carcatères est nécessaire';
+const ERROR_MINIMUM = '3 carcatères est nécessaire';
 
 export default
 @Component({
