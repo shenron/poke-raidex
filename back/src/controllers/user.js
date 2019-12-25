@@ -56,18 +56,7 @@ export async function addUser(user: string, password: string, accounts: Array<st
   return userModel.toObject();
 }
 
-export async function setIsActive(id: string, isActive: boolean) {
-  const user = await User.findOne({
-    _id: id,
-  });
-
-  user.isActive = isActive;
-
-  await user.save();
-  return true;
-}
-
-export async function deleteSubAccount(id: string, session: Object) {
+export async function updateSubAccount(id: string, name: string, session: Object) {
   const promises = [];
 
   // test if user is a sub-accounts of current user
@@ -78,10 +67,45 @@ export async function deleteSubAccount(id: string, session: Object) {
 
   let userModel;
   try {
-    userModel = await User.findOne({ _id: session.user.id });
+    userModel = await User.findOne({ _id: id });
+    userModel.user = name;
+    promises.push(userModel.save());
   } catch (e) {
     throw Error('User Not Found');
   }
+
+  // retrieve all raid-ex with this user
+  const userId = new ObjectId(id);
+  const raidExModels = await RaidEx.find({
+    'users.id': session.user.id,
+    'users.subscriptions.userId': userId,
+  });
+
+  if (raidExModels.length) {
+    promises.push(...raidExModels.map((raidExModel) => {
+      const userI = raidExModel.users.findIndex((u) => u.id === session.user.id);
+      const subscriptionI = raidExModel.users[userI].subscriptions.findIndex(
+        (u) => u.userId.toString() === userId.toString(),
+      );
+
+      const userSubscription = raidExModel.users[userI].subscriptions[subscriptionI];
+      userSubscription.userId = new ObjectId(id);
+      userSubscription.userName = name;
+
+      raidExModel.users[userI].subscriptions.splice(subscriptionI, 1, userSubscription);
+      raidExModel.users.splice(userI, 1, raidExModel.users[userI]);
+
+      return raidExModel.save();
+    }));
+  }
+
+  return Promise.all(promises);
+}
+
+export async function deleteSubAccount(id: string, session: Object) {
+  const promises = [];
+
+  const userModel = await User.findOne({ _id: session.user.id });
 
   // remove it from the child list
   const pos = userModel.accounts.find((account) => account === id);
@@ -94,28 +118,31 @@ export async function deleteSubAccount(id: string, session: Object) {
 
   // remove all subscriptions with this user of next events
   const userId = new ObjectId(id);
-  const raidExModel = await RaidEx.findOne({
+  const raidExModels = await RaidEx.find({
     isFinished: false, // keep history
     'users.id': session.user.id,
     'users.subscriptions.userId': userId,
   });
 
-  if (raidExModel) {
-    const userI = raidExModel.users.findIndex((u) => u.id === session.user.id);
-    const subscriptionI = raidExModel.users[userI].subscriptions.findIndex(
-      (u) => u.userId.toString() === userId.toString(),
-    );
+  if (raidExModels.length) {
+    promises.push(...raidExModels.map((raidExModel) => {
+      const userI = raidExModel.users.findIndex((u) => u.id === session.user.id);
+      const subscriptionI = raidExModel.users[userI].subscriptions.findIndex(
+        (u) => u.userId.toString() === userId.toString(),
+      );
 
-    raidExModel.users[userI].subscriptions.splice(subscriptionI, 1);
-    raidExModel.users.splice(userI, 1, raidExModel.users[userI]);
+      raidExModel.users[userI].subscriptions.splice(subscriptionI, 1);
+      raidExModel.users.splice(userI, 1, raidExModel.users[userI]);
 
-    promises.push(raidExModel.save());
+      return raidExModel.save();
+    }));
   }
 
   // remove user
   promises.push(User.deleteOne({ _id: id }));
 
   // update the session
+  const sessionSubAccountI = session.user.accounts.findIndex((account) => account.id === id);
   session.user.accounts.splice(sessionSubAccountI, 1);
 
   return Promise.all(promises);

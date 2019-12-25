@@ -43,6 +43,11 @@ const actions: {
     const { data } = await api.registration(account);
     return data;
   },
+  async updateAccount({ commit }, account: {|id: string, user: string |}) {
+    await api.updateAccount(account.id, account.user);
+
+    return commit('updateAccount', account);
+  },
   async addAccount({ commit }, accountName: string) {
     const { data } = await api.addAccount(accountName);
     commit('addAccount', data);
@@ -89,6 +94,15 @@ const mutations = {
     _state.accounts = accounts;
 
     localStorage.setItem('user', JSON.stringify(_state));
+  },
+  updateAccount(_state: UserStateType, account: {|id: string, user: string |}) {
+    const pos = _state.accounts.findIndex((_account) => _account.id === account.id);
+    if (pos > -1) {
+      _state.accounts.splice(pos, 1, {
+        id: account.id,
+        label: account.user,
+      });
+    }
   },
 };
 

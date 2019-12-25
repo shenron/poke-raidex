@@ -38,6 +38,11 @@ export default {
       user,
     });
   },
+  updateAccount(id: string, user: string) {
+    return axios.put(`/api/users/accounts/${id}/name`, {
+      user,
+    });
+  },
   deleteAccount(userId: string) {
     return axios.delete(`/api/users/accounts/${userId}`);
   },

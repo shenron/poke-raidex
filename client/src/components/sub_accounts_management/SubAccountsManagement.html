@@ -1,11 +1,19 @@
 <v-form>
-  <v-row :key="account.id" v-for="account in subAccounts">
-    <v-text-field readonly :value="account.label"></v-text-field>
+  <v-row :key="account.id" v-for="(account, i) in subAccounts">
+    <v-text-field v-model="account.label"></v-text-field>
 
-    <v-btn @click.stop="dialogDelete = true"
+    <v-btn v-if="$store.state.user.accounts[i].label === account.label"
+      @click.stop="dialogDelete = true"
       class="mx-2" fab dark small color="indigo">
       <v-icon dark>mdi-minus</v-icon>
     </v-btn>
+    <template v-else>
+      <v-btn
+        @click.stop="updateAccount(account.id, account.label)"
+        class="mx-2" fab dark small color="orange">
+        <v-icon dark>mdi-content-save</v-icon>
+      </v-btn>
+    </template>
 
     <v-dialog
       v-model="dialogDelete"
