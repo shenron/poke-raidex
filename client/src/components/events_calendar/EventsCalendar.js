@@ -2,21 +2,22 @@
 
 import { Component, Vue, Watch } from 'vue-property-decorator';
 import type { EventType } from '@/definitions/calendar.d';
+import today from '@/_base/today';
 
 export default
 @Component
 class AdminCalendar extends Vue {
-  today: string = '2019-01-08';
+  today: string = '';
 
-  focus: string = '2019-01-08';
+  focus: string = '';
 
   startEventMenu: boolean = false;
 
-  startEvent: string = '2019-01-08';
+  startEvent: string = '';
 
   endEventMenu: boolean = false;
 
-  endEvent: string = '2019-01-08';
+  endEvent: string = '';
 
   startCalendar: ?Object = null;
 
@@ -103,6 +104,12 @@ class AdminCalendar extends Vue {
       return isValid && this.startEvent && this.endEvent;
     }
     return false;
+  }
+
+  created() {
+    this.today = today();
+    this.startevent = today();
+    this.endEvent = today();
   }
 
   @Watch('eventType')

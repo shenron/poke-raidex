@@ -2,13 +2,14 @@
 
 import { Component, Vue } from 'vue-property-decorator';
 import type { EventType } from '@/definitions/calendar.d';
+import today from '@/_base/today';
 
 export default
 @Component
 class UserCalendar extends Vue {
-  today: string = '2019-01-08';
+  today: string = '';
 
-  focus: string = '2019-01-08';
+  focus: string = '';
 
   get events(): Array<EventType> {
     return this.$store.state.raidex.events;
@@ -40,6 +41,11 @@ class UserCalendar extends Vue {
     }
 
     return `${startMonth} ${startYear}`;
+  }
+
+  created() {
+    this.today = today();
+    this.focus = today();
   }
 
   getEventColor(event: Object) {
