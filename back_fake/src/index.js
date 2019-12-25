@@ -7,7 +7,7 @@ const history = require('connect-history-api-fallback');
 const session = require('express-session');
 const bodyParser = require('body-parser');
 
-const root = `${__dirname}/dist`;
+const root = `${__dirname}/../dist`;
 
 const http = require('http');
 

@@ -57,4 +57,5 @@ app.use('/api/raidex', protectRoutes, routeRaidEx);
 app.use('/api/browses', protectRoutes, routesBrowses);
 app.use('/api/admin', protectAdminRoutes, routesAdmin);
 
+console.log(`Node: ${String(process.env.NODE_ENV)}`);
 app.listen(config.serverPort, () => console.log(`Back run on port ${config.serverPort}!`));

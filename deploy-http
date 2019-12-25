@@ -1,0 +1,20 @@
+#!/bin/bash
+
+# build manually client
+rm -rf ./back/static
+cd client/
+npm run build
+cd ../
+
+# copy client
+cp -r ./client/dist ./static/
+
+# build manually server
+rm -rf ./back/dist
+cd back/
+npm run build
+cd ../
+
+docker-compose \
+  -f docker-compose.yml up \
+  --build -d static pokeraidex-proxy-http db back

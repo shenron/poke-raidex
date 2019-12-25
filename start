@@ -1,0 +1,10 @@
+#!/bin/bash
+
+# Dev start
+docker network create main-nginx-proxy
+
+docker-compose \
+  -f docker-compose.yml up \
+  --build db back
+
+./stop

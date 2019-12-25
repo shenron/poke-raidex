@@ -1,0 +1,63 @@
+version: '3.5'
+
+services:
+  pokeraidex-proxy-http:
+    image: shenron/pokeraidex:proxy-http
+    build:
+      context: ./proxy-http
+      args:
+        domain_name: "localhost"
+        api_service: "back:3500"
+        static_service: "static"
+    container_name: pokeraidex-proxy-http
+    networks:
+      - main-nginx-proxy
+      - static
+      - back
+    depends_on:
+      - back
+      - static
+    ports:
+      - 3500:80
+  db:
+    image: mongo:4
+    container_name: pokeraidex-db
+    networks:
+      - db
+    volumes:
+      - data-volume:/data/db
+  static:
+    image: shenron/pokeraidex:static
+    build:
+      context: ./static
+    networks:
+      - static
+    container_name: pokeraidex-static
+  back:
+    image: shenron/pokeraidex:back
+    build: ./back
+    container_name: pokeraidex-back
+    restart: always
+    command: npm run serve
+    networks:
+      - back
+      - db
+    depends_on:
+      - db
+    environment:
+      - NODE_ENV=dev
+      - DB_HOST=db
+      - DB_NAME=prod
+volumes:
+  data-volume:
+networks:
+  back:
+    name: pokeraidex-js-back
+  static:
+    name: pokeraidex-static
+  db:
+    name: pokeraidex-db
+  main-nginx-proxy:
+    external:
+      name: main-nginx-proxy
+

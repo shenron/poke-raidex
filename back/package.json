@@ -11,7 +11,7 @@
     "flow:deps": "flow-typed install jest@23.x mongoose@v4.x.x express@4.x.x",
     "lint": "eslint src",
     "lint:fix": "eslint --fix src",
-    "serve": "NODE_ENV=production node dist/index.js",
+    "serve": "NODE_ENV=$NODE_ENV node dist/index.js",
     "watch": "babel-watch --watch src src/index.js"
   },
   "dependencies": {

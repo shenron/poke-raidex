@@ -1,9 +1,4 @@
-FROM shenron/yarn
-
-# change user to install packages
-USER root
-
-RUN apk add imagemagick --update
+FROM node:12
 
 USER node
 
@@ -12,15 +7,15 @@ ENV UHOME=/home/node/
 # Install dependencies before add src to avoid install dependencies each time
 RUN mkdir $UHOME/tmp
 COPY package.json $UHOME/tmp/package.json
-COPY yarn.lock $UHOME/tmp/yarn.lock
+COPY package-lock.json $UHOME/tmp/package-lock.json
 
-RUN mkdir $UHOME/app/.tmp
+RUN mkdir -p $UHOME/app/.tmp
 
 RUN cd $UHOME/tmp/ && \
-  yarn install --frozen-lockfile --no-cache --production && \
+  npm ci --production && \
   mv node_modules/ $UHOME/app/node_modules && \
   mv package.json $UHOME/app/package.json && \
-  mv yarn.lock $UHOME/app/yarn.lock
+  mv package-lock.json $UHOME/app/package-lock.json
 
 COPY dist $UHOME/app/dist
 
@@ -32,6 +27,6 @@ USER node
 
 WORKDIR $UHOME/app/
 
-CMD yarn run serve --production
+CMD npm run serve --production
 
 EXPOSE 3000
