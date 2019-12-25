@@ -38,8 +38,6 @@ class UserList extends Vue {
     const { data } = await getRaidEx(this.id);
 
     this.users = data.users;
-
-    console.log(this.players);
   }
 
   @Prop({ type: String, required: true })
