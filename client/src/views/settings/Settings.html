@@ -5,13 +5,26 @@
       <h1 class="display-2 font-weight-bold mb-3">
         Mon Compte
       </h1>
-      <p>Gérer les petits comptes</p>
     </v-flex>
   </v-layout>
 
   <v-col md="auto">
     <v-row align="center" justify="center">
-      <SubAccountsManagement />
+      <v-expansion-panels class="col-6">
+        <v-expansion-panel>
+          <v-expansion-panel-header>Mon Compte</v-expansion-panel-header>
+          <v-expansion-panel-content>
+            <UserSettings/>
+          </v-expansion-panel-content>
+        </v-expansion-panel>
+
+        <v-expansion-panel>
+          <v-expansion-panel-header>Mes petits comptes</v-expansion-panel-header>
+          <v-expansion-panel-content>
+            <SubAccountsManagement />
+          </v-expansion-panel-content>
+        </v-expansion-panel>
+      </v-expansion-panels>
     </v-row>
   </v-col>
 

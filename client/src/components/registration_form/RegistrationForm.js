@@ -3,6 +3,8 @@
 import { Component, Vue } from 'vue-property-decorator';
 import VInputAvailableUser from '@/components/input_available_user/VInputAvailableUser.vue';
 
+const ERROR_MINIMUM = '6 carcatères est nécessaire';
+
 export default
 @Component({
   components: {
@@ -12,16 +14,17 @@ export default
 class RegistrationForm extends Vue {
   valid: boolean = true;
 
-  user: ?string = null;
+  user: string = '';
 
-  password: ?string = null;
+  password: string = '';
 
-  passwordBix: ?string = null;
+  passwordBix: string = '';
 
   accounts: Array<string> = [''];
 
   passwordRules: Array<(string) => ?(string | boolean)> = [
     (v) => !!v || 'Le mot de passe est obligatoire!',
+    (v) => v.length >= 6 || ERROR_MINIMUM,
   ];
 
   get passwordRulesBis(): Array<(string) => ?(string | boolean)> {

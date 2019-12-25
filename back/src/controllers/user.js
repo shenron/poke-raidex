@@ -56,13 +56,13 @@ export async function addUser(user: string, password: string, accounts: Array<st
   return userModel.toObject();
 }
 
-export async function updateSubAccount(id: string, name: string, session: Object) {
+export async function updateAccount(id: string, name: string, session: Object) {
   const promises = [];
 
   // test if user is a sub-accounts of current user
   const sessionSubAccountI = session.user.accounts.findIndex((account) => account.id === id);
-  if (sessionSubAccountI === -1) {
-    throw Error('Not allowed to delete this user');
+  if (sessionSubAccountI > -1) {
+    session.user.accounts[sessionSubAccountI].label = name;
   }
 
   let userModel;
@@ -102,7 +102,41 @@ export async function updateSubAccount(id: string, name: string, session: Object
   return Promise.all(promises);
 }
 
-export async function deleteSubAccount(id: string, session: Object) {
+/**
+ * Try the login before update
+ */
+export async function updateUser(user: {| oldPassword: string, password: string, user: string |}, session: Object) {
+  let userModel;
+  if (user.password) {
+    userModel = await User
+      .findOne({
+        _id: session.user.id,
+        isActive: true,
+        isMainAccount: true,
+      })
+      .select('password');
+
+    if (!(await userModel.comparePassword(user.oldPassword))) {
+      throw Error('The password is invalid');
+    }
+  } else {
+    userModel = await User.findOne({ _id: session.user.id });
+  }
+
+  userModel.user = user.user;
+  userModel.password = user.password;
+
+  session.user.user = user;
+
+  await Promise.all([
+    userModel.save(),
+    updateAccount(session.user.id, user.user, session),
+  ]);
+
+  return true;
+}
+
+export async function deleteAccount(id: string, session: Object) {
   const promises = [];
 
   const userModel = await User.findOne({ _id: session.user.id });

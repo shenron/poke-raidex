@@ -38,7 +38,7 @@ class VInputAvailableUser extends Vue {
   get rules(): Array<(string) => ?(string | boolean)> {
     const rules = [
       (v) => this.tmpUsers.filter((account) => account === v).length === 0 || ERROR_ALREADY_EXIST,
-      (v) => v.length >= 3 || ERROR_MINIMUM,
+      (v) => v.length === 0 || v.length >= 3 || ERROR_MINIMUM,
     ];
 
     if (this.required === '' || this.required === true) {
@@ -49,6 +49,10 @@ class VInputAvailableUser extends Vue {
   }
 
   onChange(user: string) {
+    if (user === this.$store.state.user.user && (this.allowUserSession || this.allowUserSession === '')) {
+      return this.$emit('input', user);
+    }
+
     this.testDebounceUser(user);
     return this.$emit('input', user);
   }
@@ -87,4 +91,7 @@ class VInputAvailableUser extends Vue {
 
   @Prop({ type: [String, Boolean] })
   required: boolean | string;
+
+  @Prop({ type: [String, Boolean] })
+  allowUserSession: boolean | string;
 }

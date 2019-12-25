@@ -59,6 +59,11 @@ const actions: {
 
     return commit('deleteAccount', accountId);
   },
+  async updateUser({ commit }, user: {| oldPassword: string, password: string, user: string |}) {
+    await api.updateUser(user);
+
+    return commit('updateUser', user.user);
+  },
 };
 
 // mutations
@@ -103,6 +108,9 @@ const mutations = {
         label: account.user,
       });
     }
+  },
+  updateUser(_state: UserStateType, user: string) {
+    _state.user = user;
   },
 };
 

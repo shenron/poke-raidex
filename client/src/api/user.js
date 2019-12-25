@@ -46,4 +46,9 @@ export default {
   deleteAccount(userId: string) {
     return axios.delete(`/api/users/accounts/${userId}`);
   },
+  updateUser(user: {| oldPassword: string, password: string, user: string |}) {
+    return axios.put('/api/users', {
+      user,
+    });
+  },
 };

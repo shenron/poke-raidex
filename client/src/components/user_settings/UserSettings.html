@@ -1,0 +1,46 @@
+<v-form
+  ref="form"
+  v-model="valid"
+  @submit.prevent="onSubmit"
+>
+  <VInputAvailableUser v-model="user"
+    label="Nom"
+    required
+   allow-user-session />
+
+  <v-text-field
+    v-model="oldPassword"
+    label="Mot de passe actuel"
+    type="password"
+  ></v-text-field>
+
+  <v-text-field
+    v-model="password"
+    :rules="passwordRules"
+    label="Nouveau mot de passe"
+    type="password"
+  ></v-text-field>
+
+  <v-text-field
+    v-model="passwordBis"
+    :rules="passwordRulesBis"
+    label="Retaper le mot de passe"
+    type="password"
+  ></v-text-field>
+
+  <v-alert v-if="error" type="error">
+    Mot de passe actuel incorrecte.
+  </v-alert>
+  <v-alert v-else-if="success" type="success">
+    Mise à jour réussie
+  </v-alert>
+
+  <v-btn
+    :disabled="!valid"
+    color="success"
+    class="mr-4"
+    type="submit"
+  >
+    Validate
+  </v-btn>
+</v-form>
