@@ -9,9 +9,20 @@ export default
 class usersManagement extends Vue {
   users: Array<UserStateType> = [];
 
+  userTypes: Array<{| id: string, label: string |}> = []
+
   async created() {
-    const { data } = await userApi.getUsers();
-    this.users = data;
+    const [users, types] = await Promise.all([
+      userApi.getUsers(),
+      userApi.getUserTypes(),
+    ]);
+
+    this.users = users.data;
+    this.userTypes = types.data;
+  }
+
+  updateUserType(userId: string, type: string) {
+    return userApi.updateUserType(userId, type);
   }
 
   toggleUserStatus(user: UserStateType) {

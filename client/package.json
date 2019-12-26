@@ -42,7 +42,7 @@
     "eslint-plugin-import": "^2.19.1",
     "eslint-plugin-jsx-a11y": "^6.2.3",
     "eslint-plugin-react": "^7.17.0",
-    "eslint-plugin-vue": "^6.0.1",
+    "eslint-plugin-vue": "^6.0.2",
     "flow-bin": "^0.114.0",
     "flow-detect": "^1.0.1",
     "flow-typed": "^2.6.2",

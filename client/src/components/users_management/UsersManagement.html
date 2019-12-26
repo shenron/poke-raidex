@@ -1,15 +1,25 @@
-<ul class="pb-8">
-  <li v-for="user in users" :key="user.id">
-    <v-row>
-      <v-col :cols="2" class="pt-8">
-        {{ user.user }}
-      </v-col>
+<div>
+  <v-row v-for="user in users" :key="user.id">
+    <v-col :cols="2" class="pt-8">
+      {{ user.user }}
+    </v-col>
 
-      <v-col :cols="4">
-        <v-switch v-model="user.isActive"
-          @change="toggleUserStatus(user)"
-          :label="user.isActive ? 'Active' : 'Inactive'"></v-switch>
-      </v-col>
-    </v-row>
-  </li>
-</ul>
+    <v-col :cols="4">
+      <v-switch v-model="user.isActive"
+        :readonly="user.id === $store.state.user.id"
+        @change="toggleUserStatus(user)"
+        :label="user.isActive ? 'Active' : 'Inactive'"></v-switch>
+    </v-col>
+
+    <v-col :cols="4">
+      <v-select v-model="user.type"
+        @change="updateUserType(user.id, user.type)"
+        :items="userTypes"
+        label="Type"
+        item-value="id"
+        item-text="label"
+        solo
+      ></v-select>
+    </v-col>
+  </v-row>
+</div>

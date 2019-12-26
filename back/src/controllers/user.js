@@ -22,6 +22,38 @@ export async function isAvailableUser(userName: string) {
   return !user;
 }
 
+export async function getTypes() {
+  return [{
+    id: 'ADMIN',
+    label: 'Admin',
+  }, {
+    id: 'DEFAULT',
+    label: 'Défaut',
+  }];
+}
+
+export async function setType(id: string, type: string) {
+  const userModel = await User.findOne({ _id: id });
+  userModel.type = type;
+
+  return userModel.save();
+}
+
+export async function setIsActive(id: string, isActive: boolean, session: Object) {
+  if (id === session.user.id) {
+    throw Error('Impossible to change status of current user');
+  }
+
+  const user = await User.findOne({
+    _id: id,
+  });
+
+  user.isActive = isActive;
+
+  await user.save();
+  return true;
+}
+
 export async function addUser(user: string, password: string, accounts: Array<string>) {
   const isActive = false;
   const type = 'DEFAULT';

@@ -24,6 +24,12 @@ export default {
   isAvailableUser(user: string) {
     return axios.get(`/api/auth/${user}/available`);
   },
+  getUserTypes() {
+    return axios.get('/api/admin/users/types');
+  },
+  updateUserType(userId: string, type: string) {
+    return axios.put(`/api/admin/users/${userId}/type/${type}`);
+  },
   getUsers() {
     return axios.get('/api/admin/users');
   },
